@@ -5,9 +5,15 @@
 │   ├── globals.css
 │   ├── layout.tsx
 │   └── page.tsx
+├── components
+│   └── ui
+│       └── button.tsx
+├── components.json
 ├── docs
 │   └── folder-structure.md
 ├── eslint.config.mjs
+├── lib
+│   └── utils.ts
 ├── next.config.ts
 ├── package-lock.json
 ├── package.json
@@ -19,8 +25,7 @@
 │   ├── next.svg
 │   ├── vercel.svg
 │   └── window.svg
-├── README.md
 ├── tsconfig.json
 └── workspace-repo-structure-context.md
 
-4 directories, 19 files
+7 directories, 21 files
