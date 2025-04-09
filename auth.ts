@@ -9,7 +9,6 @@ export type User = {
 };
 
 const auth = {
-    user: null as User | null,
     sessionCookie: null,
     getUser: async (): Promise<User | null> => {
         auth.sessionCookie = (await cookies()).get("session");

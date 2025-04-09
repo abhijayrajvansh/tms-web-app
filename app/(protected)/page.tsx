@@ -10,12 +10,19 @@ interface Order {
 }
 
 export default async function Home() {
-  const response = await axiosInstance({
-    url: 'http://localhost:3000/api/orders',
-    method: 'get',
-  });
-
-  const orders: Order[] = response.data.orders;
+  let orders;
+  
+  try {
+    const response = await axiosInstance({
+      url: 'http://localhost:3000/api/orders',
+      method: 'get',
+    });
+  
+    orders = response.data.orders;
+  } 
+  catch (error) {
+    console.error('Error', error)
+  }
 
   return (
     <main className="container mx-auto max-w-[800px]">
@@ -34,7 +41,7 @@ export default async function Home() {
           </thead>
           
           <tbody>
-            {orders.map((order) => (
+            {orders.map((order: Order) => (
               <tr key={order.$id}>
                 <td className="flex flex-col">
                   <strong>{order.customer}</strong>
