@@ -1,7 +1,7 @@
 import auth from "@/auth";
 import { redirect } from "next/navigation";
 
-export default async function () {
+const page = async () => {
     const user = await auth.getUser();
     
     if (user) redirect("/");
@@ -35,3 +35,5 @@ export default async function () {
         </div>
     );
 }
+
+export default page;

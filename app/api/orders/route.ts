@@ -1,8 +1,7 @@
 import { createSessionClient } from "@/appwrite/appwrite.config";
 import { cookies } from "next/headers";
-import { NextRequest } from "next/server"; 
 
-export async function GET(request: NextRequest) {
+export async function GET() {
     const sessionCookie = (await cookies()).get("session");
 
     try {
