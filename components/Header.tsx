@@ -6,7 +6,7 @@ export default async function Header() {
 
     return (
         <header>
-            <>{user && <strong>welcome, {user?.name || user.email}</strong>}</>
+            <>{user && <strong>Welcome, {user?.name || user.email}</strong>}</>
 
             <div>
                 <form action={auth.deleteSession}>
