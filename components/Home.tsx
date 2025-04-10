@@ -41,16 +41,19 @@ const Home = ({ orders, permissions }: HomeProps) => {
   };
 
   const handleSubmit = async () => {
-    const form = new FormData();
-    Object.entries(formData).forEach(([key, value]) => form.append(key, value));
-    await submitOrderAction(form);
-    window.location.reload();
+    try {
+      const form = new FormData();
+      Object.entries(formData).forEach(([key, value]) => form.append(key, value));
+      await submitOrderAction(form);
+      window.location.reload();
+    } catch (error) {
+      console.log('error creating order', error)
+    }
   };
 
   const handleDelete = async (orderId: string) => {
     try {
       await deleteOrderAction(orderId);
-      // Refresh the page to show updated orders
       window.location.reload();
     } catch (error) {
       console.error('Error deleting order:', error);
@@ -103,6 +106,7 @@ const Home = ({ orders, permissions }: HomeProps) => {
             <select name="type" value={formData.type} onChange={handleChange} required>
               <option value="">Select Type</option>
               <option value="Purchase">Purchase</option>
+              <option value="Purchase">Subscription</option>
               <option value="Refund">Refund</option>
             </select>
             <Button type="submit">Create Order</Button>
