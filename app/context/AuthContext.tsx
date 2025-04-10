@@ -3,7 +3,7 @@
 import React, { createContext, useContext } from 'react';
 import type { Models } from 'appwrite';
 
-type User = Models.User<{}> | null;
+type User = Models.User<Record<string, unknown>> | null;
 
 const AuthContext = createContext<{ user: User }>({
   user: null,

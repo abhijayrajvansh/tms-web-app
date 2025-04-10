@@ -1,8 +1,6 @@
 'use client';
 
-import { useAuth } from '@/app/context/AuthContext';
 import React, { useState } from 'react';
-import axiosInstance from '@/lib/axiosInstance';
 import { submitOrderAction } from '@/app/actions/submitOrder';
 import { deleteOrderAction } from '@/app/actions/deleteOrder';
 import { Button } from './ui/button';
@@ -42,11 +40,11 @@ const Home = ({ orders, permissions }: HomeProps) => {
     setFormData({ ...formData, [name]: value });
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    // e.preventDefault();
+  const handleSubmit = async () => {
     const form = new FormData();
     Object.entries(formData).forEach(([key, value]) => form.append(key, value));
     await submitOrderAction(form);
+    window.location.reload();
   };
 
   const handleDelete = async (orderId: string) => {
@@ -88,7 +86,7 @@ const Home = ({ orders, permissions }: HomeProps) => {
           </div>
           <div className="flex justify-between mt-3">
             <input
-              className="rounded-lg border"
+              className="rounded-lg border px-3"
               type="number"
               name="total"
               placeholder="Total"
