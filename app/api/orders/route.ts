@@ -1,6 +1,5 @@
 import { createSessionClient } from "@/appwrite/appwrite.config";
 import { cookies } from "next/headers";
-import { ID } from 'node-appwrite';
 
 export async function GET() {
     const sessionCookie = (await cookies()).get("session");

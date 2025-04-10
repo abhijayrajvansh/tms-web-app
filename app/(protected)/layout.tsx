@@ -16,6 +16,7 @@ export default async function ProtectedLayout({ children }: { children: React.Re
     user = await auth.getUser() 
   } 
   catch (error) {
+    console.error('error:', error)
     redirect('/login');
   }
 
