@@ -1,7 +1,9 @@
 import { cookies } from "next/headers";
 import axios from "axios";
 
-const axiosInstance = async ({ url, method }: { url: string, method: string }) => {
+const SERVER_URL = process.env.NEXT_PUBLIC_SERVER_URL as string;
+
+const axiosInstance = async ({ api, method }: { api: string, method: string }) => {
     const sessionCookie = (await cookies()).get("session");
     
     const headers = {
@@ -9,7 +11,7 @@ const axiosInstance = async ({ url, method }: { url: string, method: string }) =
     };
     
     return axios({
-        url,
+        url: SERVER_URL + api,
         method,
         headers,
     });

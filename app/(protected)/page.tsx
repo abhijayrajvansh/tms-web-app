@@ -14,7 +14,7 @@ export default async function Home() {
   
   try {
     const response = await axiosInstance({
-      url: 'http://localhost:3000/api/orders',
+      api: 'orders',
       method: 'get',
     });
   
