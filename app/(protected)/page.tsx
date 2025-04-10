@@ -21,11 +21,21 @@ export default async function Page() {
   const collectionID = process.env.NEXT_PUBLIC_COLLECTION_ORDERS as string;
 
   const canReadOrders = await hasPermission(user.$id, collectionID, 'read')
+  const canCreateOrders = await hasPermission(user.$id, collectionID, 'create')
+  const canUpdateOrders = await hasPermission(user.$id, collectionID, 'update')
+  const canDeleteOrders = await hasPermission(user.$id, collectionID, 'delete')
+
+  const permissions = {
+    canReadOrders,
+    canCreateOrders,
+    canUpdateOrders,
+    canDeleteOrders
+  }
 
   
   return (
     <main className="container mx-auto max-w-[800px]">
-      {canReadOrders && <Home orders={orders} />}
+      <Home orders={orders} permissions={permissions} />
     </main>
   );
 }
