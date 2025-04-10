@@ -1,8 +1,8 @@
 import React from "react";
-import auth, { User } from "@/auth";
+import auth, { UserModel } from "@/auth";
 
 export default async function Header() {
-    const user: User | null = await auth.getUser();
+    const user: UserModel | null = await auth.getUser();
 
     return (
         <header>

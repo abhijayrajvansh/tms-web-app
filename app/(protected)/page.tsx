@@ -1,15 +1,8 @@
 import axiosInstance from '@/lib/axiosInstance';
+import Home from '@/components/Home';
+import auth from '@/auth';
 
-interface Order {
-  $id: string;
-  customer: string;
-  customer_email: string;
-  status: string;
-  type: string;
-  total: number;
-}
-
-export default async function Home() {
+export default async function Page() {
   let orders;
   
   try {
@@ -24,37 +17,12 @@ export default async function Home() {
     console.error('Error', error)
   }
 
+  const user = await auth.getUser();
+  console.log('user id:', user.$id)
+
   return (
     <main className="container mx-auto max-w-[800px]">
-      <div id="orders-container">
-        <strong>Orders</strong>
-        <p>Recent orders from your store.</p>
-
-        <table>
-          <thead>
-            <tr>
-              <th>Customer</th>
-              <th>Status</th>
-              <th>Type</th>
-              <th>Total</th>
-            </tr>
-          </thead>
-          
-          <tbody>
-            {orders.map((order: Order) => (
-              <tr key={order.$id}>
-                <td className="flex flex-col">
-                  <strong>{order.customer}</strong>
-                  <p>{order.customer_email}</p>
-                </td>
-                <td>{order.status}</td>
-                <td>{order.type}</td>
-                <td>${order.total}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+      <Home orders={orders}/>
     </main>
   );
 }
