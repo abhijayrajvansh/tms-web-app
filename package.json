@@ -7,7 +7,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "pg": "tsx scripts/playground.ts"
+    "pg": "tsx scripts/playground.ts",
+    "generate:token": "tsx scripts/generateToken.ts"
   },
   "dependencies": {
     "@radix-ui/react-slot": "^1.1.2",
