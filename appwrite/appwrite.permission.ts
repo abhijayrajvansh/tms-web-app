@@ -1,34 +1,30 @@
-// import { createAdminClient } from "@/appwrite/appwrite.config";
-// import { UserModel } from '@/auth'
+import { createAdminClient } from './appwrite.config';
 
-// export async function hasPermissionOnCollection(
-//     user: UserModel,
-//     databaseId: string,
-//     collectionId: string,
-//     permissionType: "read" | "create" | "update" | "delete"
-// ): Promise<boolean> {
-//     try {
-//         const { databases } = await createAdminClient();
-//         const collection = await databases.getCollection(databaseId, collectionId);
+export async function hasPermission(
+  userId: string,
+  collectionId: string,
+  permissionType: 'create' | 'read' | 'update' | 'delete',
+): Promise<boolean> {
+  const client = await createAdminClient();
+  const [collection, user] = await Promise.all([
+    client.databases.getCollection(process.env.NEXT_PUBLIC_DATABASE_ID as string, collectionId),
+    client.users.get(userId),
+  ]);
 
-//         const userPermissions = [
-//             `user:${user.$id}`,
-//             `role:admin`,
-//             ...(user.labels ?? []).map((label) => `role:${label}`),
-//         ];
+  // Check if permission exists for:
+  // 'user:userId' - specific user
+  // 'role:all' - all users
+  // 'role:member' - all logged-in users
+  // Any user labels the user has
+  const permissions = collection.$permissions.filter(
+    (p: string) =>
+      p.startsWith(`${permissionType}(`) &&
+      (p.includes(`user:${userId}`) ||
+        p.includes('role:all') ||
+        p.includes('role:member') ||
+        // Check if any of the user's labels match the permission
+        (user.labels && user.labels.some((label) => p.includes(`label:${label}`)))),
+  );
 
-//         const permissionMap = {
-//             read: collection.readPermissions,
-//             create: collection.createPermissions,
-//             update: collection.updatePermissions,
-//             delete: collection.deletePermissions,
-//         };
-
-//         const permissions = permissionMap[permissionType] || [];
-
-//         return permissions.some((p) => userPermissions.includes(p));
-//     } catch (err) {
-//         console.error("Permission check failed:", err);
-//         return false;
-//     }
-// }
+  return permissions.length > 0;
+}
