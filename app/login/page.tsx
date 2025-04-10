@@ -16,7 +16,6 @@ const page = async () => {
                         type="email"
                         name="email"
                         placeholder="Enter your email..."
-                        defaultValue="r.abhijay@uptut.com"
                     />
                 </div>
                 <div>
