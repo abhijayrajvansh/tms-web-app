@@ -4,6 +4,8 @@ import { useAuth } from '@/app/context/AuthContext';
 import React, { useState } from 'react';
 import axiosInstance from '@/lib/axiosInstance';
 import { submitOrderAction } from '@/app/actions/submitOrder';
+import { deleteOrderAction } from '@/app/actions/deleteOrder';
+import { Button } from './ui/button';
 
 interface HomeProps {
   orders: Order[];
@@ -40,48 +42,65 @@ const Home = ({ orders }: HomeProps) => {
     await submitOrderAction(form);
   };
 
+  const handleDelete = async (orderId: string) => {
+    try {
+      await deleteOrderAction(orderId);
+      // Refresh the page to show updated orders
+      window.location.reload();
+    } catch (error) {
+      console.error('Error deleting order:', error);
+    }
+  };
+
   return (
     <div id="orders-container">
       <strong>Orders</strong>
       <p>Recent orders from your store.</p>
 
       <form onSubmit={handleSubmit}>
-        <input
-          type="text"
-          name="customer"
-          placeholder="Customer Name"
-          value={formData.customer}
-          onChange={handleChange}
-          required
-        />
-        <input
-          type="email"
-          name="customer_email"
-          placeholder="Customer Email"
-          value={formData.customer_email}
-          onChange={handleChange}
-          required
-        />
-        <input
-          type="number"
-          name="total"
-          placeholder="Total"
-          value={formData.total}
-          onChange={handleChange}
-          required
-        />
-        <select name="status" value={formData.status} onChange={handleChange} required>
-          <option value="">Select Status</option>
-          <option value="PENDING">PENDING</option>
-          <option value="FULFILLED">FULFILLED</option>
-          <option value="DECLINED">DECLINED</option>
-        </select>
-        <select name="type" value={formData.type} onChange={handleChange} required>
-          <option value="">Select Type</option>
-          <option value="Purchase">Purchase</option>
-          <option value="Refund">Refund</option>
-        </select>
-        <button type="submit">Create Order</button>
+        <div className="flex gap-5">
+          <input
+            className="rounded-lg border"
+            type="text"
+            name="customer"
+            placeholder="Customer Name"
+            value={formData.customer}
+            onChange={handleChange}
+            required
+          />
+          <input
+            className="rounded-lg border"
+            type="email"
+            name="customer_email"
+            placeholder="Customer Email"
+            value={formData.customer_email}
+            onChange={handleChange}
+            required
+          />
+        </div>
+        <div className="flex justify-between mt-3">
+          <input
+            className="rounded-lg border"
+            type="number"
+            name="total"
+            placeholder="Total"
+            value={formData.total}
+            onChange={handleChange}
+            required
+          />
+          <select name="status" value={formData.status} onChange={handleChange} required>
+            <option value="">Select Status</option>
+            <option value="PENDING">PENDING</option>
+            <option value="FULFILLED">FULFILLED</option>
+            <option value="DECLINED">DECLINED</option>
+          </select>
+          <select name="type" value={formData.type} onChange={handleChange} required>
+            <option value="">Select Type</option>
+            <option value="Purchase">Purchase</option>
+            <option value="Refund">Refund</option>
+          </select>
+          <Button type="submit">Create Order</Button>
+        </div>
       </form>
 
       <table>
@@ -91,6 +110,8 @@ const Home = ({ orders }: HomeProps) => {
             <th>Status</th>
             <th>Type</th>
             <th>Total</th>
+            {/* delete permission */}
+            {<th>Actions</th>}
           </tr>
         </thead>
 
@@ -104,6 +125,15 @@ const Home = ({ orders }: HomeProps) => {
               <td>{order.status}</td>
               <td>{order.type}</td>
               <td>${order.total}</td>
+              <td>
+                {/* delete permission */}
+                {<Button
+                  onClick={() => handleDelete(order.$id)}
+                  className="text-white bg-red-500 hover:bg-red-700"
+                >
+                  Delete
+                </Button>}
+              </td>
             </tr>
           ))}
         </tbody>
