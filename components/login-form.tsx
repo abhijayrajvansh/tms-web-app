@@ -74,7 +74,7 @@ export function LoginForm({ className, ...props }: React.ComponentProps<'div'>) 
               <div className="flex flex-col gap-3">
                 <Button
                   type="submit"
-                  className="w-full py-5 mb-1 bg-blue-600"
+                  className="w-full text-base py-5 mb-1 bg-blue-600"
                   disabled={login.isPending}
                 >
                   {login.isPending ? 'Logging in...' : 'Login'}
