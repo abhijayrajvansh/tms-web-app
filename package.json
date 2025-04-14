@@ -6,14 +6,20 @@
     "dev": "next dev --turbopack",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "pg": "tsx scripts/playground.ts",
+    "generate:token": "tsx scripts/generateToken.ts"
   },
   "dependencies": {
     "@radix-ui/react-slot": "^1.1.2",
+    "appwrite": "^17.0.1",
+    "axios": "^1.8.4",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
+    "dotenv": "^16.4.7",
     "lucide-react": "^0.487.0",
     "next": "15.2.4",
+    "node-appwrite": "^15.0.1",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "tailwind-merge": "^3.2.0",
