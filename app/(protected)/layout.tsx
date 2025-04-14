@@ -1,5 +1,4 @@
 import React from 'react';
-import Header from '@/components/Header';
 
 import auth from '@/auth';
 import { cookies } from 'next/headers';
@@ -22,7 +21,6 @@ export default async function ProtectedLayout({ children }: { children: React.Re
 
   return (
     <AuthProvider user={user}>
-      <Header />
       {children}
     </AuthProvider>
   );

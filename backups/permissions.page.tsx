@@ -1,5 +1,4 @@
 import axiosInstance from '@/lib/axiosInstance';
-import Home from '@/components/Home';
 import auth from '@/auth';
 import { hasPermission } from '@/appwrite/appwrite.permission';
 
@@ -32,10 +31,12 @@ export default async function Page() {
     canDeleteOrders
   }
 
+  console.log({permissions})
+
   
   return (
     <main className="container mx-auto max-w-[800px]">
-      <Home orders={orders} permissions={permissions} />
+      dashboard page
     </main>
   );
 }
