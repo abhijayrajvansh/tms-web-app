@@ -14,16 +14,23 @@ interface FormData {
 }
 
 export function LoginForm({ className, ...props }: React.ComponentProps<'div'>) {
+  const login = useLogin();
+
   const [formData, setFormData] = useState<FormData>({
     email: '',
     password: '',
   });
 
-  const login = useLogin();
+  const convertUserIDtoEmail = (userID: string) => {
+    const convertedEmail = userID + 'tms@uptut.com';
+    return convertedEmail;
+  };
 
   const handleLogin = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    login.mutate(formData);
+    const emailAddress = convertUserIDtoEmail(formData.email);
+    // console.log({ ...formData, email: emailAddress });
+    login.mutate({ email: emailAddress, password: formData.password });
   };
 
   return (
@@ -47,7 +54,7 @@ export function LoginForm({ className, ...props }: React.ComponentProps<'div'>) 
                   className="py-5"
                   id="email"
                   name="email"
-                  type="email"
+                  type="string"
                   placeholder="123456789"
                   required
                   disabled={login.isPending}
