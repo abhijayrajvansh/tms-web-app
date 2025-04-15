@@ -14,7 +14,7 @@ export const useLogin = () => {
 
   return useMutation({
     mutationFn: async (credentials: LoginCredentials) => {
-      const response = await axios.post(env.SERVER_URL + '/auth/login', credentials);
+      const response = await axios.post(env.SERVER_URL + '/api/auth/login', credentials);
       return response.data;
     },
     onSuccess: () => {
@@ -30,7 +30,7 @@ export const useLogout = () => {
 
   return useMutation({
     mutationFn: async () => {
-      const response = await axios.post(env.SERVER_URL + '/auth/logout');
+      const response = await axios.post(env.SERVER_URL + '/api/auth/logout');
       return response.data;
     },
     onSuccess: () => {
