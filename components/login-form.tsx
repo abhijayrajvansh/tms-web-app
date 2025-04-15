@@ -25,7 +25,7 @@ export function LoginForm({ className, ...props }: React.ComponentProps<'div'>) 
   });
 
   const convertUserIDtoEmail = (userID: string) => {
-    const convertedEmail = userID + 'tms@uptut.com';
+    const convertedEmail = userID + env.USERID_EMAIL;
     return convertedEmail;
   };
 
