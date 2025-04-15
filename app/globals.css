@@ -44,7 +44,7 @@
 }
 
 :root {
-  --radius: 0.5rem;
+  --radius: 0.3rem;
   --background: oklch(1 0 0);
   --foreground: oklch(0.141 0.005 285.823);
   --card: oklch(1 0 0);
@@ -113,11 +113,39 @@
 }
 
 
+
+
 @layer base {
   * {
     @apply border-border outline-ring/50;
   }
   body {
     @apply bg-background text-foreground;
+  }
+}
+
+
+/* debugging border classes */
+@layer components {
+  .bred {
+    @apply border-2 border-red-500
+  }
+  .bgreen {
+    @apply border-2 border-green-500
+  }
+  .bblue {
+    @apply border-2 border-blue-500
+  }
+  .byellow {
+    @apply border-2 border-yellow-500
+  }
+  .bpurple {
+    @apply border-2 border-purple-500
+  }
+  .bblack {
+    @apply border-2 border-black
+  }
+  .bwhite {
+    @apply border-2 border-white
   }
 }
