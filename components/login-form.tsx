@@ -36,6 +36,10 @@ export function LoginForm({ className, ...props }: React.ComponentProps<'div'>) 
     login.mutate({ email: emailAddress, password: formData.password });
   };
 
+  const handleGoogleAuth = () => {
+    console.log('clicked on google login')
+  }
+
   return (
     <div className={cn('flex flex-col gap-6', className)} {...props}>
       <Card className="border-none shadow-none">
@@ -85,7 +89,7 @@ export function LoginForm({ className, ...props }: React.ComponentProps<'div'>) 
               </div>
 
               {login.isError && (
-                <div className="text-red-600 bg-red-100 p-2 rounded text-sm border border-red-300">
+                <div className="text-red-600 bg-red-100 px-2 py-1 rounded text-sm border border-red-300">
                   {env.NODE_ENV === 'dev' ? (
                     (login.error as Error).message
                   ) : (
@@ -97,7 +101,7 @@ export function LoginForm({ className, ...props }: React.ComponentProps<'div'>) 
                 </div>
               )}
 
-              <div className="flex flex-col gap-3">
+              <div className="flex flex-col gap-2">
                 <Button
                   type="submit"
                   className="w-full text-base py-5 mb-1 bg-blue-600 hover:border-black"
@@ -109,23 +113,17 @@ export function LoginForm({ className, ...props }: React.ComponentProps<'div'>) 
                 <div className="flex items-center justify-center">
                   <div className="border-t w-full"></div>
                 </div>
-                <Button
-                  variant="outline"
-                  size={'default'}
-                  className="w-full py-5 mt-1 hover:border-black/40 transition-all ease-in-out text-[15px]"
-                >
-                  <FcGoogle size={18} />
-                  Log in with Google
-                </Button>
               </div>
             </div>
-            {/* <div className="mt-4 text-center text-sm">
-              Don&apos;t have an account?{' '}
-              <a href="#" className="hover:underline text-blue-600 underline-offset-4">
-                Sign up here!
-              </a>
-            </div> */}
           </form>
+          <Button onClick={handleGoogleAuth}
+            variant="outline"
+            size={'default'}
+            className="w-full py-5 hover:border-black/40 transition-all mt-3 ease-in-out text-[15px]"
+          >
+            <FcGoogle size={18} />
+            Log in with Google
+          </Button>
         </CardContent>
       </Card>
     </div>
