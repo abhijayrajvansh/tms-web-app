@@ -37,8 +37,8 @@ export function LoginForm({ className, ...props }: React.ComponentProps<'div'>) 
   };
 
   const handleGoogleAuth = () => {
-    console.log('clicked on google login')
-  }
+    console.log('clicked on google login');
+  };
 
   return (
     <div className={cn('flex flex-col gap-6', className)} {...props}>
@@ -52,7 +52,7 @@ export function LoginForm({ className, ...props }: React.ComponentProps<'div'>) 
         </CardHeader>
         <CardContent>
           <form onSubmit={handleLogin}>
-            <div className="flex flex-col gap-6">
+            <div className="flex flex-col gap-5">
               <div className="grid gap-2">
                 <Label className="text-base" htmlFor="email">
                   User ID
@@ -110,13 +110,16 @@ export function LoginForm({ className, ...props }: React.ComponentProps<'div'>) 
                   {login.isPending ? 'Logging in...' : 'Login'}
                 </Button>
 
-                <div className="flex items-center justify-center">
+                <div className="flex items-center justify-center gap-3">
+                  <div className="border-t w-full"></div>
+                  <p className="text-black/50 font-light text-sm">or</p>
                   <div className="border-t w-full"></div>
                 </div>
               </div>
             </div>
           </form>
-          <Button onClick={handleGoogleAuth}
+          <Button
+            onClick={handleGoogleAuth}
             variant="outline"
             size={'default'}
             className="w-full py-5 hover:border-black/40 transition-all mt-3 ease-in-out text-[15px]"
