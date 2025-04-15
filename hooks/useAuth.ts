@@ -1,6 +1,7 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import axios from 'axios';
 import { useRouter } from 'next/navigation';
+import env from '@/constants';
 
 interface LoginCredentials {
   email: string;
@@ -13,7 +14,7 @@ export const useLogin = () => {
 
   return useMutation({
     mutationFn: async (credentials: LoginCredentials) => {
-      const response = await axios.post('/api/auth/login', credentials);
+      const response = await axios.post(env.SERVER_URL + '/auth/login', credentials);
       return response.data;
     },
     onSuccess: () => {
@@ -29,7 +30,7 @@ export const useLogout = () => {
 
   return useMutation({
     mutationFn: async () => {
-      const response = await axios.post('/api/auth/logout');
+      const response = await axios.post(env.SERVER_URL + '/auth/logout');
       return response.data;
     },
     onSuccess: () => {
