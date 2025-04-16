@@ -10,7 +10,7 @@ export async function POST(request: Request) {
 
     (await cookies()).set('session', session.secret, {
       httpOnly: true,
-      sameSite: 'strict',
+      sameSite: 'none',
       secure: true,
       expires: new Date(session.expire),
       path: '/',
