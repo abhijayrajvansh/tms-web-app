@@ -10,8 +10,8 @@ const account = new Account(client);
 // Go to OAuth provider login page
 const res = account.createOAuth2Session(
   OAuthProvider.Google, // provider
-  'http://localhost:3000/login', // redirect here on success
+  'http://localhost:3000/dashboard', // redirect here on success
   'http://localhost:3000/login', // redirect here on failure
-  // ['repo', 'user'], // scopes (optional)
 );
 
+console.log({res})

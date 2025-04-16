@@ -19,7 +19,7 @@ const Dashboard = () => {
           <p>email: {user?.email}</p>
           <p>roles: {user?.labels}</p>
         </div>
-        <Button
+        <Button disabled={logout.isPending}
           onClick={() => logout.mutate()}
           variant={'destructive'}
           className="cursor-pointer hover:bg-red-500 mt-3"
