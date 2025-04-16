@@ -1,27 +1,33 @@
+import { createAdminClient } from '@/appwrite/appwrite.config';
 import { cookies } from 'next/headers';
+import { NextResponse } from 'next/server';
 
 export async function GET(request: Request) {
   try {
     const { searchParams } = new URL(request.url);
-    const secret = searchParams.get('secret');
     const userId = searchParams.get('userId');
+    const secret = searchParams.get('secret');
 
-    if (!secret || !userId) {
-      return Response.json({ error: 'Missing parameters' }, { status: 400 });
+    if (!userId || !secret) {
+      console.error('Missing userId or secret in OAuth callback');
+      return NextResponse.redirect(new URL('/login', request.url));
     }
 
-    // Set the session cookie
-    (await cookies()).set('session', secret, {
+    const { account } = await createAdminClient();
+    const session = await account.createSession(userId, secret);
+
+    (await cookies()).set('session', session.secret, {
       httpOnly: true,
-      sameSite: 'lax',
+      sameSite: 'strict',
       secure: true,
+      expires: new Date(session.expire),
       path: '/',
     });
 
-    return Response.redirect(new URL('/dashboard', request.url));
+    return NextResponse.redirect(new URL('/login', request.url));
   } 
   catch (error) {
     console.error('OAuth callback error:', error);
-    return Response.redirect(new URL('/login', request.url));
+    return NextResponse.redirect(new URL('/login', request.url));
   }
 }

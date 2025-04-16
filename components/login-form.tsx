@@ -6,7 +6,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { FormEvent, useState } from 'react';
-import { useLogin } from '@/hooks/useAuth';
+import { useLogin, useGoogleAuth } from '@/hooks/useAuth';
 import { FcGoogle } from 'react-icons/fc';
 import { IoIosWarning } from 'react-icons/io';
 import env from '@/constants';
@@ -18,6 +18,7 @@ interface FormData {
 
 export function LoginForm({ className, ...props }: React.ComponentProps<'div'>) {
   const login = useLogin();
+  const googleAuth = useGoogleAuth();
 
   const [formData, setFormData] = useState<FormData>({
     email: '',
@@ -37,7 +38,7 @@ export function LoginForm({ className, ...props }: React.ComponentProps<'div'>) 
   };
 
   const handleGoogleAuth = () => {
-    console.log('clicked on google login');
+    googleAuth.mutate();
   };
 
   return (
@@ -118,7 +119,8 @@ export function LoginForm({ className, ...props }: React.ComponentProps<'div'>) 
               </div>
             </div>
           </form>
-          <Button disabled={login.isPending}
+          <Button
+            disabled={login.isPending}
             onClick={handleGoogleAuth}
             variant="outline"
             size={'default'}

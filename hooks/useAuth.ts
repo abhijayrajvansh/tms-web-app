@@ -39,3 +39,16 @@ export const useLogout = () => {
     },
   });
 };
+
+export const useGoogleAuth = () => {
+  return useMutation({
+    mutationFn: async () => {
+      const response = await axios.post(env.SERVER_URL + '/api/auth/google');
+      window.location.href = response.data.url;
+      return response.data;
+    },
+    onError: (error) => {
+      console.error('Google auth error:', error);
+    },
+  });
+};
