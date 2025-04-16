@@ -11,10 +11,8 @@ export default async function ProtectedLayout({ children }: { children: React.Re
   let user = null;
 
   try {
-    const sessionCookie = (await cookies()).get('session');
-    if (!sessionCookie) throw new Error('No session');
-
     user = await auth.getUser() 
+    if(!user) throw new Error('no user session')
   } 
   catch (error) {
     console.error('error:', error)

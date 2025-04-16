@@ -1,25 +1,17 @@
-import { createAdminClient } from '@/appwrite/appwrite.config';
-import { OAuthProvider } from 'appwrite';
-import env from '@/constants';
-import "dotenv/config";
+import 'dotenv/config'
+import { Client, Account, OAuthProvider } from 'appwrite';
 
-async function main() {
-  const { account } = await createAdminClient();
-  const baseUrl = env.CLIENT_URL
+const client = new Client()
+  .setEndpoint(process.env.NEXT_PUBLIC_ENDPOINT as string) // Your API Endpoint
+  .setProject(process.env.NEXT_PUBLIC_PROJECT_ID as string); // Your project ID
 
-  // Ensure URLs are absolute and properly encoded
-  const googleCallbackUrl = new URL('/api/auth/oauth/callback', baseUrl).toString();
-  const failedLoginRedirect = new URL('/login', baseUrl).toString();
+const account = new Account(client);
 
-  const res = await account.createOAuth2Token(
-    OAuthProvider.Google,
-    googleCallbackUrl,
-    failedLoginRedirect,
-  );
+// Go to OAuth provider login page
+const res = account.createOAuth2Session(
+  OAuthProvider.Google, // provider
+  'http://localhost:3000/login', // redirect here on success
+  'http://localhost:3000/login', // redirect here on failure
+  // ['repo', 'user'], // scopes (optional)
+);
 
-  console.log({ res });
-
-  // console.log({googleCallbackUrl, failedLoginRedirect})
-}
-
-main();

@@ -7,7 +7,9 @@ import type { Models } from 'node-appwrite';
 export type UserModel = Models.User
 
 const auth = {
+    user: null,
     sessionCookie: null,
+    
     getUser: async (): Promise<UserModel | null> => {
         auth.sessionCookie = (await cookies()).get("session");
         try {
