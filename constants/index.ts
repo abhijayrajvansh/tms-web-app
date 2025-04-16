@@ -5,6 +5,9 @@ const env = {
   NODE_ENV: process.env.NEXT_PUBLIC_NODE_ENV as string,
   SERVER_URL: process.env.NEXT_PUBLIC_SERVER_URL as string,
   CLIENT_URL: process.env.NEXT_PUBLIC_CLIENT_URL as string,
+  ENDPOINT: process.env.NEXT_PUBLIC_ENDPOINT as string,
+  PROJECT_ID: process.env.NEXT_PUBLIC_PROJECT_ID as string,
+
 
   // app abstraction
   USERID_EMAIL: 'tms@uptut.com'
