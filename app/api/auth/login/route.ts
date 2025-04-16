@@ -1,5 +1,5 @@
 import { createAdminClient } from '@/appwrite/appwrite.config';
-import { cookies } from 'next/headers';
+import { NextResponse } from 'next/server';
 
 export async function POST(request: Request) {
   try {
@@ -8,15 +8,17 @@ export async function POST(request: Request) {
 
     const session = await account.createEmailPasswordSession(email, password);
 
-    (await cookies()).set('session', session.secret, {
+    const response = NextResponse.redirect(new URL('/dashboard', request.url));
+
+    response.cookies.set('session', session.secret, {
       httpOnly: true,
-      sameSite: 'none',
       secure: true,
-      expires: new Date(session.expire),
+      sameSite: 'lax',
       path: '/',
+      expires: new Date(session.expire),
     });
 
-    return Response.json({ success: true });
+    return response;
   } catch (error) {
     console.error('Login error:', error);
     return Response.json({ error: 'Invalid credentials' }, { status: 401 });
