@@ -104,7 +104,7 @@ export function LoginForm({ className, ...props }: React.ComponentProps<'div'>) 
               <div className="flex flex-col gap-2">
                 <Button
                   type="submit"
-                  className="w-full text-base py-5 mb-1 bg-blue-600 hover:border-black"
+                  className="w-full text-base py-5 mb-1 bg-blue-600 hover:border-black cursor-pointer"
                   disabled={login.isPending}
                 >
                   {login.isPending ? 'Logging in...' : 'Login'}
@@ -118,11 +118,11 @@ export function LoginForm({ className, ...props }: React.ComponentProps<'div'>) 
               </div>
             </div>
           </form>
-          <Button
+          <Button disabled={login.isPending}
             onClick={handleGoogleAuth}
             variant="outline"
             size={'default'}
-            className="w-full py-5 hover:border-black/40 transition-all mt-3 ease-in-out text-[15px]"
+            className="w-full py-5 hover:border-black/40 transition-all mt-3 ease-in-out text-[15px] cursor-pointer"
           >
             <FcGoogle size={18} />
             Log in with Google

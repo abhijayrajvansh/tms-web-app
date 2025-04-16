@@ -10,7 +10,7 @@ const Dashboard = () => {
     <div className="h-screen flex items-center justify-center">
       <div className="flex flex-col items-center gap-3 justify-center">
         <div>dashbaord page</div>
-        <Button onClick={() => logout.mutate()} variant={'destructive'}>
+        <Button onClick={() => logout.mutate()} variant={'destructive'} className='cursor-pointer hover:bg-red-500'>
           logout
         </Button>
       </div>
