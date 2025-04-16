@@ -19,7 +19,8 @@ export const useLogin = () => {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['user'] });
-      router.push('/dashboard');
+      // router.push('/dashboard'); // buggy bc of nextjs route handling
+      window.location.href = '/dashboard';
     },
   });
 };
