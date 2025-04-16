@@ -34,6 +34,6 @@ export async function GET(request: Request) {
     return response;
   } catch (error) {
     console.error('OAuth callback error:', error);
-    return NextResponse.redirect(new URL('/login', request.url));
+    return NextResponse.redirect(new URL(`/login?error=You are not authorized for admin access.`, request.url));
   }
 }

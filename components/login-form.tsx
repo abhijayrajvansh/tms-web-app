@@ -16,7 +16,11 @@ interface FormData {
   password: string;
 }
 
-export function LoginForm({ className, ...props }: React.ComponentProps<'div'>) {
+export function LoginForm({
+  className,
+  urlError,
+  ...props
+}: React.ComponentProps<'div'> & { urlError?: string | null }) {
   const login = useLogin();
   const googleAuth = useGoogleAuth();
 
@@ -89,14 +93,14 @@ export function LoginForm({ className, ...props }: React.ComponentProps<'div'>) 
                 />
               </div>
 
-              {login.isError && (
+              {(login.isError || urlError) && (
                 <div className="text-red-600 bg-red-100 px-2 py-1 rounded text-sm border border-red-300">
                   {env.NODE_ENV === 'dev' ? (
-                    (login.error as Error).message
+                    (login.error as Error)?.message || urlError
                   ) : (
                     <p className="flex items-center gap-2">
                       <IoIosWarning size={21} />
-                      Invalid login credentials. Try again!
+                      {urlError || 'Invalid login credentials. Try again!'}
                     </p>
                   )}
                 </div>
