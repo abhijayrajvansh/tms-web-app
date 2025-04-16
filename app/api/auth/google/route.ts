@@ -6,7 +6,6 @@ export async function POST() {
   try {
     const { account } = await createAdminClient();
     
-    // Create OAuth session with callback URL
     const url = await account.createOAuth2Token(
       OAuthProvider.Google, 
       `${env.SERVER_URL}/api/auth/oauth/callback`, 
