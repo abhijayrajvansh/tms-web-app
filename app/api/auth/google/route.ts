@@ -15,6 +15,6 @@ export async function POST() {
     return Response.json({ url });
   } catch (error) {
     console.error('Google auth error:', error);
-    return Response.json({ error: 'Failed to initialize Google auth' }, { status: 500 });
+    return Response.json({ error: (error as Error).message }, { status: 500 });
   }
 }
