@@ -8,7 +8,15 @@ export async function POST(request: Request) {
 
     const session = await account.createEmailPasswordSession(email, password);
 
-    const response = NextResponse.redirect(new URL('/dashboard', request.url));
+    const response = new NextResponse(
+      JSON.stringify({ success: true }),
+      {
+        status: 200,
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      }
+    );
 
     response.cookies.set('session', session.secret, {
       httpOnly: true,
@@ -19,7 +27,8 @@ export async function POST(request: Request) {
     });
 
     return response;
-  } catch (error) {
+  } 
+  catch (error) {
     console.error('Login error:', error);
     return Response.json({ error: 'Invalid credentials' }, { status: 401 });
   }
