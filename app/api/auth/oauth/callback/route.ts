@@ -1,4 +1,4 @@
-import { createAdminClient } from '@/appwrite/appwrite.config';
+import { createAdminClient, createSessionClient } from '@/appwrite/appwrite.config';
 import { NextResponse } from 'next/server';
 
 export async function GET(request: Request) {
@@ -14,6 +14,12 @@ export async function GET(request: Request) {
 
     const { account } = await createAdminClient();
     const session = await account.createSession(userId, secret);
+    
+    const { account: userAccount } = await createSessionClient(session.secret);
+    const { labels } = await userAccount.get();
+    
+    const isAdmin = labels.includes('admin');
+    if(!isAdmin) throw new Error ("non admin user tried to login with google")
 
     const response = NextResponse.redirect(new URL('/dashboard', request.url));
 
@@ -26,8 +32,7 @@ export async function GET(request: Request) {
     });
 
     return response;
-  } 
-  catch (error) {
+  } catch (error) {
     console.error('OAuth callback error:', error);
     return NextResponse.redirect(new URL('/login', request.url));
   }
