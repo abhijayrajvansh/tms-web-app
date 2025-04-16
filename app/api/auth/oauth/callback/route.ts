@@ -16,15 +16,17 @@ export async function GET(request: Request) {
     const { account } = await createAdminClient();
     const session = await account.createSession(userId, secret);
 
-    (await cookies()).set('session', session.secret, {
+    const response = NextResponse.redirect(new URL('/dashboard', request.url));
+
+    response.cookies.set('session', session.secret, {
       httpOnly: true,
-      sameSite: 'strict',
       secure: true,
-      expires: new Date(session.expire),
+      sameSite: 'lax',
       path: '/',
+      expires: new Date(session.expire),
     });
 
-    return NextResponse.redirect(new URL('/login', request.url));
+    return response;
   } 
   catch (error) {
     console.error('OAuth callback error:', error);
