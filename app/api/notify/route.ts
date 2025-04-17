@@ -8,7 +8,21 @@ const { databases } = await createAdminClient();
 export async function POST(req: NextRequest) {
   const body = await req.json();
 
-  const { userId, title, body: message } = body;
+  const { title, description, is_read, user_id } = body;
+  const action = body.action || null;
+
+  // Change the validation to check if fields are undefined/null
+  if (
+    title === undefined || 
+    description === undefined || 
+    is_read === undefined || 
+    user_id === undefined
+  ) {
+    return NextResponse.json(
+      { error: 'Missing required fields' },
+      { status: 400 }
+    );
+  }
 
   try {
     const res = await databases.createDocument(
@@ -16,16 +30,17 @@ export async function POST(req: NextRequest) {
       env.COLLECTION_NOTIFICATIONS,
       ID.unique(),
       {
-        userId,
         title,
-        body: message,
-        is_read: false,
-      },
-      [`user:${userId}`],
+        description,
+        is_read,
+        user_id,
+        action, 
+      }
     );
 
-    return NextResponse.json({ success: true, docId: res.$id });
-  } catch (error) {
+    return NextResponse.json({ success: true, notificationID: res.$id });
+  } 
+  catch (error) {
     return NextResponse.json({ error: error }, { status: 500 });
   }
 }
