@@ -2,6 +2,9 @@ import React from 'react';
 import auth from '@/auth';
 import { redirect } from 'next/navigation';
 import { AuthProvider } from '@/app/context/AuthContext';
+import { SidebarInset, SidebarProvider } from '@/components/ui/sidebar';
+import { AppSidebar } from '@/components/app-sidebar';
+import { SiteHeader } from '@/components/site-header';
 
 export const dynamic = 'force-dynamic';
 
@@ -11,7 +14,12 @@ export default async function ProtectedLayout({ children }: { children: React.Re
 
   return (
     <AuthProvider user={user}>
-      {children}
+      <SidebarProvider>
+      <AppSidebar variant="inset" />
+      <SidebarInset>
+        {children}
+      </SidebarInset>
+    </SidebarProvider>
     </AuthProvider>
   );
 }

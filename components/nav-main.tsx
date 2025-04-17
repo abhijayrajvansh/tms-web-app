@@ -27,7 +27,7 @@ import {
   IconSettings,
   IconUsers,
 } from '@tabler/icons-react';
-import { useRouter } from 'next/navigation';
+import { useRouter, usePathname } from 'next/navigation';
 
 const navMain = [
   {
@@ -58,8 +58,8 @@ const navMain = [
 ];
 
 export function AdminNavPanel() {
-
-  const router = useRouter()
+  const router = useRouter();
+  const pathname = usePathname();
 
   return (
     <SidebarGroup>
@@ -67,11 +67,16 @@ export function AdminNavPanel() {
       <SidebarGroupContent className="flex flex-col gap-2">
         <SidebarMenu>
           {navMain.map((item) => (
-            <SidebarMenuItem key={item.title} onClick={(e) => {
-              e.preventDefault()
-              router.push(item.url)
-            }}>
-              <SidebarMenuButton tooltip={item.title}>
+            <SidebarMenuItem
+              key={item.title}
+              onClick={(e) => {
+                e.preventDefault();
+                router.push(item.url);
+              }}
+              data-active={pathname === item.url}
+              className={pathname === item.url ? 'bg-sidebar-primary/30 rounded' : ''}
+            >
+              <SidebarMenuButton tooltip={item.title} className='hover:bg-primary/40'>
                 {item.icon && <item.icon />}
                 <span>{item.title}</span>
               </SidebarMenuButton>
