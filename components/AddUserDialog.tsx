@@ -3,15 +3,22 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { IconLoader2 } from '@tabler/icons-react';
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import axios from 'axios';
 import env from '@/constants';
+import { z } from 'zod';
+import { useRouter } from 'next/navigation';
+
+const userSchema = z.object({
+  userId: z.string().refine((val) => {
+    const num = parseInt(val);
+    return !isNaN(num) && num.toString().length >= 6;
+  }, 'User Login ID must be a number with at least 6 digits'),
+  username: z.string(),
+  password: z.string().min(8, 'Password must contain at least 8 characters'),
+  roles: z.array(z.string()).min(1, 'At least one role must be assigned'),
+});
 
 interface AddUserDialogProps {
   isOpen: boolean;
@@ -27,7 +34,8 @@ export function AddUserDialog({ isOpen, onOpenChange }: AddUserDialogProps) {
     password: '',
     roles: [] as string[],
   });
-
+  const [validationError, setValidationError] = React.useState<string | null>(null);
+  const router = useRouter();
   const queryClient = useQueryClient();
 
   const createUserMutation = useMutation({
@@ -37,10 +45,12 @@ export function AddUserDialog({ isOpen, onOpenChange }: AddUserDialogProps) {
       password: string;
       roles: string[];
     }) => {
-      const response = await axios.post(`${env.SERVER_URL}/api/users/create`, {
+      const payload = {
         ...userData,
         userId: parseInt(userData.userId),
-      });
+      };
+      console.log('Creating user with payload:', payload);
+      const response = await axios.post(`${env.SERVER_URL}/api/users/create`, payload);
       return response.data;
     },
     onSuccess: () => {
@@ -52,20 +62,30 @@ export function AddUserDialog({ isOpen, onOpenChange }: AddUserDialogProps) {
         password: '',
         roles: [],
       });
+      setValidationError(null);
     },
   });
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    createUserMutation.mutate(formData);
+    try {
+      userSchema.parse(formData);
+      setValidationError(null);
+      createUserMutation.mutate(formData);
+      window.location.reload();
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        setValidationError(error.errors[0].message);
+      }
+    }
   };
 
   const handleRoleChange = (value: string) => {
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
       roles: prev.roles.includes(value)
-        ? prev.roles.filter(role => role !== value)
-        : [...prev.roles, value]
+        ? prev.roles.filter((role) => role !== value)
+        : [...prev.roles, value],
     }));
   };
 
@@ -77,6 +97,7 @@ export function AddUserDialog({ isOpen, onOpenChange }: AddUserDialogProps) {
         password: '',
         roles: [],
       });
+      setValidationError(null);
     }
   }, [isOpen]);
 
@@ -87,25 +108,25 @@ export function AddUserDialog({ isOpen, onOpenChange }: AddUserDialogProps) {
           <DialogTitle>Add New User</DialogTitle>
         </DialogHeader>
         <form onSubmit={handleSubmit} className="space-y-4">
-          {createUserMutation.error && (
+          {(createUserMutation.error || validationError) && (
             <div className="bg-destructive/15 text-destructive text-sm p-3 rounded-md">
-              {createUserMutation.error instanceof Error 
-                ? createUserMutation.error.message 
-                : 'An error occurred while creating the user'}
+              {validationError ||
+                (createUserMutation.error instanceof Error
+                  ? createUserMutation.error.message
+                  : 'An error occurred while creating the user')}
             </div>
           )}
           <div className="space-y-2">
-            <Label htmlFor="userId">User ID</Label>
+            <Label htmlFor="userId">Login ID</Label>
             <Input
               id="userId"
-              type="number"
               value={formData.userId}
-              onChange={(e) => setFormData(prev => ({ ...prev, userId: e.target.value }))}
+              onChange={(e) => setFormData((prev) => ({ ...prev, userId: e.target.value }))}
               required
             />
           </div>
           <div className="space-y-2">
-            <Label htmlFor="username">Username</Label>
+            <Label htmlFor="username">Name</Label>
             <Input
               id="username"
               value={formData.username}
@@ -124,27 +145,33 @@ export function AddUserDialog({ isOpen, onOpenChange }: AddUserDialogProps) {
             />
           </div>
           <div className="space-y-2">
-            <Label>Roles</Label>
-            <div className="flex gap-2">
+            <Label>Assign Roles</Label>
+            <div className="flex gap-2 mt-3">
               {availableRoles.map((role) => (
                 <Button
+                  size={'sm'}
                   key={role}
                   type="button"
                   variant={formData.roles.includes(role) ? 'default' : 'outline'}
                   onClick={() => handleRoleChange(role)}
-                  className="capitalize"
+                  className="capitalize text-xs"
                 >
                   {role}
                 </Button>
               ))}
             </div>
+            <p className="text-xs mt-5 text-black/60 pl-1">
+              Caution: Assigning admin role grants full access to all features & permissions.
+            </p>
           </div>
           <div className="flex justify-end gap-2 pt-4">
             <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>
               Cancel
             </Button>
             <Button type="submit" disabled={createUserMutation.isPending}>
-              {createUserMutation.isPending ? <IconLoader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
+              {createUserMutation.isPending ? (
+                <IconLoader2 className="mr-2 h-4 w-4 animate-spin" />
+              ) : null}
               Add User
             </Button>
           </div>

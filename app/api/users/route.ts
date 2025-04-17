@@ -16,7 +16,19 @@ export async function GET(request: NextRequest) {
   const limit = parseInt(searchParams.get('limit') || '100');
 
   const { users } = await createAdminClient();
-  const response = await users.list([Query.limit(limit), Query.offset(offset)]);
+
+  // First get total count of all users with roles
+  const allUsers = await users.list([Query.orderDesc('$createdAt')]);
+  const totalFilteredUsers = allUsers.users.filter(
+    (user) => user.labels && user.labels.length > 0,
+  ).length;
+
+  // Then get paginated results with sorting
+  const response = await users.list([
+    Query.orderDesc('$createdAt'),
+    Query.limit(limit),
+    Query.offset(offset),
+  ]);
 
   const simplifiedUsers = response.users
     .filter((user) => user.labels && user.labels.length > 0)
@@ -25,13 +37,14 @@ export async function GET(request: NextRequest) {
       name: user.name,
       email: formatEmail(user.email),
       roles: user.labels,
+      createdAt: user.$createdAt, // Include creation date in response
     }));
 
   return Response.json({
-    total: simplifiedUsers.length, // Update total to reflect filtered count
+    total: totalFilteredUsers,
     users: simplifiedUsers,
     offset,
     limit,
-    hasMore: offset + limit < simplifiedUsers.length,
+    hasMore: offset + limit < totalFilteredUsers,
   });
 }

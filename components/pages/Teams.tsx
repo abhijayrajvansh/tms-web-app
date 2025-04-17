@@ -53,6 +53,7 @@ interface User {
   name: string;
   email: string;
   roles: string[];
+  createdAt: string;
 }
 
 interface UsersResponse {
@@ -124,19 +125,16 @@ const Teams = () => {
                       <IconPlus className="size-4" />
                       <span className="hidden lg:inline ml-2 font-semibold">Add User</span>
                     </Button>
-                    <AddUserDialog
-                      isOpen={isDialogOpen}
-                      onOpenChange={setIsDialogOpen}
-                    />
+                    <AddUserDialog isOpen={isDialogOpen} onOpenChange={setIsDialogOpen} />
                   </div>
                 </div>
                 <Table>
                   <TableHeader>
                     <TableRow>
                       <TableHead className="pl-4">No.</TableHead>
-                      <TableHead>ID</TableHead>
-                      <TableHead>Name</TableHead>
                       <TableHead>User ID</TableHead>
+                      <TableHead>Name</TableHead>
+                      <TableHead>Login ID</TableHead>
                       <TableHead>Assigned Roles</TableHead>
                       <TableHead className="w-[50px]"></TableHead>
                     </TableRow>
@@ -145,7 +143,7 @@ const Teams = () => {
                     {data?.users.map((user, index) => (
                       <TableRow key={user.id}>
                         <TableCell>
-                          <span className="pl-4">{index + 1}</span>
+                          <span className="pl-4">{page * pageSize + index + 1}</span>
                         </TableCell>
                         <TableCell>
                           <span className="font-mono text-xs text-muted-foreground">{user.id}</span>
@@ -182,6 +180,22 @@ const Teams = () => {
                         </TableCell>
                       </TableRow>
                     ))}
+                    {data &&
+                      data.users.length < pageSize &&
+                      Array.from({ length: pageSize - data.users.length }).map((_, index) => (
+                        <TableRow key={`empty-${index}`}>
+                          <TableCell>
+                            <span className="pl-4">
+                              {page * pageSize + data.users.length + index + 1}
+                            </span>
+                          </TableCell>
+                          <TableCell>-</TableCell>
+                          <TableCell>-</TableCell>
+                          <TableCell>-</TableCell>
+                          <TableCell>-</TableCell>
+                          <TableCell></TableCell>
+                        </TableRow>
+                      ))}
                   </TableBody>
                 </Table>
                 <div className="flex items-center justify-between px-4 py-4 border-t">
