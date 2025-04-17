@@ -2,11 +2,20 @@
 
 import React from 'react';
 import { SiteHeader } from '../site-header';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import axios from 'axios';
 import env from '@/constants';
 import { Button } from '../ui/button';
 import { IconDotsVertical, IconLoader2, IconPlus } from '@tabler/icons-react';
+import { AddUserDialog } from '../AddUserDialog';
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from '@/components/ui/dialog';
+import { Input } from '@/components/ui/input';
 import {
   Table,
   TableBody,
@@ -57,6 +66,9 @@ interface UsersResponse {
 const Teams = () => {
   const [page, setPage] = React.useState(0);
   const [pageSize, setPageSize] = React.useState(10);
+  const [isDialogOpen, setIsDialogOpen] = React.useState(false);
+
+  const queryClient = useQueryClient();
 
   const { data, isLoading, error } = useQuery<UsersResponse>({
     queryKey: ['users', page, pageSize],
@@ -65,6 +77,25 @@ const Teams = () => {
         `${env.SERVER_URL}/api/users?offset=${page * pageSize}&limit=${pageSize}`,
       );
       return response.data;
+    },
+  });
+
+  const createUserMutation = useMutation({
+    mutationFn: async (userData: {
+      userId: string;
+      username: string;
+      password: string;
+      roles: string[];
+    }) => {
+      const response = await axios.post(`${env.SERVER_URL}/api/users/create`, {
+        ...userData,
+        userId: parseInt(userData.userId),
+      });
+      return response.data;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['users'] });
+      setIsDialogOpen(false);
     },
   });
 
@@ -84,10 +115,19 @@ const Teams = () => {
               <div className="rounded-lg border">
                 <div className="flex items-center justify-between p-4">
                   <div className="flex flex-1 items-center gap-2">
-                    <Button variant="outline" size="sm" className='hover:bg-primary/90 bg-primary hover:text-white text-white rounded cursor-pointer'>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      className="hover:bg-primary/90 bg-primary hover:text-white text-white rounded cursor-pointer"
+                      onClick={() => setIsDialogOpen(true)}
+                    >
                       <IconPlus className="size-4" />
                       <span className="hidden lg:inline ml-2 font-semibold">Add User</span>
                     </Button>
+                    <AddUserDialog
+                      isOpen={isDialogOpen}
+                      onOpenChange={setIsDialogOpen}
+                    />
                   </div>
                 </div>
                 <Table>
