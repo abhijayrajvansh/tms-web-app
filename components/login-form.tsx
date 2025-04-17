@@ -10,6 +10,7 @@ import { useLogin, useGoogleAuth } from '@/hooks/useAuth';
 import { FcGoogle } from 'react-icons/fc';
 import { IoIosWarning } from 'react-icons/io';
 import env from '@/constants';
+import { IconLoader } from '@tabler/icons-react';
 
 interface FormData {
   email: string;
@@ -112,6 +113,7 @@ export function LoginForm({
                   className="w-full text-base py-5 mb-1 bg-blue-600 hover:border-black cursor-pointer"
                   disabled={login.isPending}
                 >
+                  {login.isPending && <IconLoader className="animate-spin"/>}
                   {login.isPending ? 'Logging in...' : 'Login'}
                 </Button>
 

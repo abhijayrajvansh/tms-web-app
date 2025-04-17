@@ -2,7 +2,6 @@
 
 import {
   IconDots,
-  IconFolder,
   IconShare3,
   IconTrash,
   type Icon,
@@ -25,22 +24,50 @@ import {
   useSidebar,
 } from "@/components/ui/sidebar"
 
-export function UserNavDocuments({
-  items,
-}: {
-  items: {
-    name: string
-    url: string
-    icon: Icon
-  }[]
-}) {
+import {
+  IconCamera,
+  IconChartBar,
+  IconDashboard,
+  IconDatabase,
+  IconFileAi,
+  IconFileDescription,
+  IconFileWord,
+  IconFolder,
+  IconHelp,
+  IconInnerShadowTop,
+  IconListDetails,
+  IconReport,
+  IconSearch,
+  IconSettings,
+  IconUsers,
+} from "@tabler/icons-react"
+
+const documents = [
+  {
+    name: "Data Library",
+    url: "#",
+    icon: IconDatabase,
+  },
+  {
+    name: "Reports",
+    url: "#",
+    icon: IconReport,
+  },
+  {
+    name: "Word Assistant",
+    url: "#",
+    icon: IconFileWord,
+  },
+]
+
+export function UserNavDocuments() {
   const { isMobile } = useSidebar()
 
   return (
     <SidebarGroup className="group-data-[collapsible=icon]:hidden">
       <SidebarGroupLabel>Documents</SidebarGroupLabel>
       <SidebarMenu>
-        {items.map((item) => (
+        {documents.map((item) => (
           <SidebarMenuItem key={item.name}>
             <SidebarMenuButton asChild>
               <a href={item.url}>
