@@ -1,7 +1,7 @@
 'use client';
 
 import {
-  IconCreditCard,
+  IconMail,
   IconDotsVertical,
   IconLoader,
   IconLogout,
@@ -79,17 +79,13 @@ export function UserNavProfile() {
             </DropdownMenuLabel>
             <DropdownMenuSeparator />
             <DropdownMenuGroup>
-              <DropdownMenuItem>
+              <DropdownMenuItem disabled>
                 <IconUserCircle />
                 Account
               </DropdownMenuItem>
-              <DropdownMenuItem>
-                <IconCreditCard />
-                Billing
-              </DropdownMenuItem>
-              <DropdownMenuItem>
-                <IconNotification />
-                Notifications
+              <DropdownMenuItem disabled>
+                <IconMail />
+                Mails
               </DropdownMenuItem>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
