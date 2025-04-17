@@ -10,8 +10,7 @@ export async function POST(req: NextRequest) {
 
   const { title, description, is_read, user_id } = body;
   const action = body.action || null;
-
-  // Change the validation to check if fields are undefined/null
+  
   if (
     title === undefined || 
     description === undefined || 
