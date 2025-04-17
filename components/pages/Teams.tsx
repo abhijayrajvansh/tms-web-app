@@ -56,7 +56,7 @@ import {
   AlertDialogTitle,
   AlertDialogCancel,
   AlertDialogAction,
-} from "@/components/ui/alert-dialog";
+} from '@/components/ui/alert-dialog';
 
 interface User {
   id: string;
@@ -189,8 +189,8 @@ const Teams = () => {
                               <DropdownMenuItem>Edit</DropdownMenuItem>
                               <DropdownMenuItem>View Profile</DropdownMenuItem>
                               <DropdownMenuSeparator />
-                              <DropdownMenuItem 
-                                variant="destructive" 
+                              <DropdownMenuItem
+                                variant="destructive"
                                 onClick={() => handleDeleteUser(user)}
                               >
                                 Delete
@@ -309,7 +309,7 @@ const Teams = () => {
               onClick={confirmDelete}
               className="bg-destructive text-white hover:bg-destructive/90"
             >
-              {deleteUserMutation.isPending ? "Deleting..." : "Delete"}
+              {deleteUserMutation.isPending ? 'Deleting...' : 'Delete'}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
