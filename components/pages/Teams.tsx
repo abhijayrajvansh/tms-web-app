@@ -24,6 +24,20 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { Badge } from '../ui/badge';
 import { columns } from './teams-columns';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
+import {
+  IconChevronLeft,
+  IconChevronRight,
+  IconChevronsLeft,
+  IconChevronsRight,
+} from '@tabler/icons-react';
+import { Label } from '../ui/label';
 
 interface User {
   id: string;
@@ -41,10 +55,15 @@ interface UsersResponse {
 }
 
 const Teams = () => {
+  const [page, setPage] = React.useState(0);
+  const [pageSize, setPageSize] = React.useState(10);
+
   const { data, isLoading, error } = useQuery<UsersResponse>({
-    queryKey: ['users'],
+    queryKey: ['users', page, pageSize],
     queryFn: async () => {
-      const response = await axios.get(`${env.SERVER_URL}/api/users`);
+      const response = await axios.get(
+        `${env.SERVER_URL}/api/users?offset=${page * pageSize}&limit=${pageSize}`,
+      );
       return response.data;
     },
   });
@@ -125,6 +144,77 @@ const Teams = () => {
                     ))}
                   </TableBody>
                 </Table>
+                <div className="flex items-center justify-between px-4 py-4 border-t">
+                  <div className="flex-1 text-sm text-muted-foreground">
+                    {data?.total} user(s) total
+                  </div>
+                  <div className="flex w-full items-center justify-end gap-6 lg:w-auto">
+                    <div className="flex items-center gap-2">
+                      <Label htmlFor="rows-per-page" className="text-sm font-medium">
+                        Rows per page
+                      </Label>
+                      <Select
+                        value={pageSize.toString()}
+                        onValueChange={(value) => {
+                          setPageSize(parseInt(value));
+                          setPage(0);
+                        }}
+                      >
+                        <SelectTrigger className="h-8 w-20">
+                          <SelectValue placeholder={pageSize} />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {[10, 20, 30, 50, 100].map((size) => (
+                            <SelectItem key={size} value={size.toString()}>
+                              {size}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </div>
+                    <div className="flex w-fit items-center justify-center text-sm font-medium">
+                      Page {page + 1} of {Math.ceil((data?.total || 0) / pageSize)}
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <Button
+                        variant="outline"
+                        className="h-8 w-8 p-0"
+                        onClick={() => setPage(0)}
+                        disabled={page === 0}
+                      >
+                        <span className="sr-only">Go to first page</span>
+                        <IconChevronsLeft className="h-4 w-4" />
+                      </Button>
+                      <Button
+                        variant="outline"
+                        className="h-8 w-8 p-0"
+                        onClick={() => setPage(page - 1)}
+                        disabled={page === 0}
+                      >
+                        <span className="sr-only">Go to previous page</span>
+                        <IconChevronLeft className="h-4 w-4" />
+                      </Button>
+                      <Button
+                        variant="outline"
+                        className="h-8 w-8 p-0"
+                        onClick={() => setPage(page + 1)}
+                        disabled={!data?.hasMore}
+                      >
+                        <span className="sr-only">Go to next page</span>
+                        <IconChevronRight className="h-4 w-4" />
+                      </Button>
+                      <Button
+                        variant="outline"
+                        className="h-8 w-8 p-0"
+                        onClick={() => setPage(Math.ceil((data?.total || 0) / pageSize) - 1)}
+                        disabled={!data?.hasMore}
+                      >
+                        <span className="sr-only">Go to last page</span>
+                        <IconChevronsRight className="h-4 w-4" />
+                      </Button>
+                    </div>
+                  </div>
+                </div>
               </div>
             )}
           </div>
