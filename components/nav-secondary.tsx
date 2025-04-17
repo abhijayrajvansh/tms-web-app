@@ -38,12 +38,7 @@ const navSecondary = [
     title: 'Get Help',
     url: '#',
     icon: IconHelp,
-  },
-  {
-    title: 'Search',
-    url: '#',
-    icon: IconSearch,
-  },
+  }
 ];
 
 export function ControlNavPanel({ ...props }: React.ComponentPropsWithoutRef<typeof SidebarGroup>) {

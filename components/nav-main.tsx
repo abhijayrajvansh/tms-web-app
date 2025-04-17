@@ -27,12 +27,18 @@ import {
   IconSettings,
   IconUsers,
 } from '@tabler/icons-react';
+import { useRouter } from 'next/navigation';
 
 const navMain = [
   {
     title: 'Dashboard',
-    url: '#',
+    url: '/dashboard',
     icon: IconDashboard,
+  },
+  {
+    title: 'Team',
+    url: '/teams',
+    icon: IconUsers,
   },
   {
     title: 'Lifecycle',
@@ -49,21 +55,22 @@ const navMain = [
     url: '#',
     icon: IconFolder,
   },
-  {
-    title: 'Team',
-    url: '#',
-    icon: IconUsers,
-  },
 ];
 
 export function AdminNavPanel() {
+
+  const router = useRouter()
+
   return (
     <SidebarGroup>
       <SidebarGroupLabel>Admin Panel</SidebarGroupLabel>
       <SidebarGroupContent className="flex flex-col gap-2">
         <SidebarMenu>
           {navMain.map((item) => (
-            <SidebarMenuItem key={item.title}>
+            <SidebarMenuItem key={item.title} onClick={(e) => {
+              e.preventDefault()
+              router.push(item.url)
+            }}>
               <SidebarMenuButton tooltip={item.title}>
                 {item.icon && <item.icon />}
                 <span>{item.title}</span>
