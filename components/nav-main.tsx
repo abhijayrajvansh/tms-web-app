@@ -52,7 +52,8 @@ export function AdminNavPanel() {
 
   return (
     <SidebarGroup>
-      <SidebarGroupLabel>Admin Panel</SidebarGroupLabel>
+      {/* admin panel */}
+      <SidebarGroupLabel>Main</SidebarGroupLabel>
       <SidebarGroupContent className="flex flex-col gap-2">
         <SidebarMenu>
           {navMain.map((item) => (

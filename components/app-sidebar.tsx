@@ -7,6 +7,7 @@ import { UserNavDocuments } from '@/components/nav-documents';
 import { AdminNavPanel } from '@/components/nav-main';
 import { ControlNavPanel } from '@/components/nav-secondary';
 import { UserNavProfile } from '@/components/nav-user';
+import { FaTruck } from "react-icons/fa";
 import {
   Sidebar,
   SidebarContent,
@@ -24,9 +25,9 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         <SidebarMenu>
           <SidebarMenuItem>
             <SidebarMenuButton asChild className="data-[slot=sidebar-menu-button]:!p-1.5">
-              <a href="#">
-                <IconInnerShadowTop className="!size-5" />
-                <span className="text-base font-semibold">Acme Inc.</span>
+              <a href="/dashboard">
+                <FaTruck className="!size-5" />
+                <span className="text-base font-semibold">Uptut TMS.</span>
               </a>
             </SidebarMenuButton>
           </SidebarMenuItem>
