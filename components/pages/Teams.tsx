@@ -96,7 +96,7 @@ const Teams = () => {
                       <TableHead className="pl-4">No.</TableHead>
                       <TableHead>ID</TableHead>
                       <TableHead>Name</TableHead>
-                      <TableHead>Email</TableHead>
+                      <TableHead>User ID</TableHead>
                       <TableHead>Roles</TableHead>
                       <TableHead className="w-[50px]"></TableHead>
                     </TableRow>
