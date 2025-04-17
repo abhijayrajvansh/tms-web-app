@@ -50,9 +50,9 @@ export function UserNavDocuments() {
         {documents.map((item) => (
           <SidebarMenuItem
             key={item.name}
-            className={pathname === item.url ? 'bg-sidebar-primary/30 rounded' : ''}
+            className={pathname === item.url ? 'bg-sidebar-primary/40 rounded' : ''}
           >
-            <SidebarMenuButton asChild className="hover:bg-primary/40">
+            <SidebarMenuButton asChild className="hover:bg-primary/30">
               <a href={item.url}>
                 <item.icon />
                 <span>{item.name}</span>

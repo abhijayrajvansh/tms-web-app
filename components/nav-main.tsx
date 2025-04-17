@@ -63,9 +63,9 @@ export function AdminNavPanel() {
                 router.push(item.url);
               }}
               data-active={pathname === item.url}
-              className={pathname === item.url ? 'bg-sidebar-primary/30 rounded' : ''}
+              className={pathname === item.url ? 'bg-primary/40 rounded' : ''}
             >
-              <SidebarMenuButton tooltip={item.title} className='hover:bg-primary/40'>
+              <SidebarMenuButton tooltip={item.title} className='hover:bg-primary/30'>
                 {item.icon && <item.icon />}
                 <span>{item.title}</span>
               </SidebarMenuButton>

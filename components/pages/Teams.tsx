@@ -84,9 +84,9 @@ const Teams = () => {
               <div className="rounded-lg border">
                 <div className="flex items-center justify-between p-4">
                   <div className="flex flex-1 items-center gap-2">
-                    <Button variant="outline" size="sm">
+                    <Button variant="outline" size="sm" className='hover:bg-primary/90 bg-primary hover:text-white text-white rounded cursor-pointer'>
                       <IconPlus className="size-4" />
-                      <span className="hidden lg:inline ml-2">Add User</span>
+                      <span className="hidden lg:inline ml-2 font-semibold">Add User</span>
                     </Button>
                   </div>
                 </div>
