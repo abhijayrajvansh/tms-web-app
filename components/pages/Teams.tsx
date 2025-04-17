@@ -47,6 +47,16 @@ import {
   IconChevronsRight,
 } from '@tabler/icons-react';
 import { Label } from '../ui/label';
+import {
+  AlertDialog,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogCancel,
+  AlertDialogAction,
+} from "@/components/ui/alert-dialog";
 
 interface User {
   id: string;
@@ -68,6 +78,7 @@ const Teams = () => {
   const [page, setPage] = React.useState(0);
   const [pageSize, setPageSize] = React.useState(10);
   const [isDialogOpen, setIsDialogOpen] = React.useState(false);
+  const [userToDelete, setUserToDelete] = React.useState<User | null>(null);
 
   const queryClient = useQueryClient();
 
@@ -81,24 +92,28 @@ const Teams = () => {
     },
   });
 
-  const createUserMutation = useMutation({
-    mutationFn: async (userData: {
-      userId: string;
-      username: string;
-      password: string;
-      roles: string[];
-    }) => {
-      const response = await axios.post(`${env.SERVER_URL}/api/users/create`, {
-        ...userData,
-        userId: parseInt(userData.userId),
+  const deleteUserMutation = useMutation({
+    mutationFn: async (userId: string) => {
+      const response = await axios.delete(`${env.SERVER_URL}/api/users/delete`, {
+        data: { userId },
       });
       return response.data;
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['users'] });
-      setIsDialogOpen(false);
     },
   });
+
+  const handleDeleteUser = (user: User) => {
+    setUserToDelete(user);
+  };
+
+  const confirmDelete = () => {
+    if (userToDelete) {
+      deleteUserMutation.mutate(userToDelete.id);
+      setUserToDelete(null);
+    }
+  };
 
   return (
     <>
@@ -174,7 +189,12 @@ const Teams = () => {
                               <DropdownMenuItem>Edit</DropdownMenuItem>
                               <DropdownMenuItem>View Profile</DropdownMenuItem>
                               <DropdownMenuSeparator />
-                              <DropdownMenuItem variant="destructive">Delete</DropdownMenuItem>
+                              <DropdownMenuItem 
+                                variant="destructive" 
+                                onClick={() => handleDeleteUser(user)}
+                              >
+                                Delete
+                              </DropdownMenuItem>
                             </DropdownMenuContent>
                           </DropdownMenu>
                         </TableCell>
@@ -274,6 +294,26 @@ const Teams = () => {
           </div>
         </div>
       </div>
+      <AlertDialog open={!!userToDelete} onOpenChange={(open) => !open && setUserToDelete(null)}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Are you sure you want to delete this user?</AlertDialogTitle>
+            <AlertDialogDescription>
+              This action cannot be undone. This will permanently delete the user
+              {userToDelete && ` ${userToDelete.name}`} and remove their data from the system.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={confirmDelete}
+              className="bg-destructive text-white hover:bg-destructive/90"
+            >
+              {deleteUserMutation.isPending ? "Deleting..." : "Delete"}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </>
   );
 };
