@@ -1,28 +1,12 @@
-"use client"
+'use client';
 
-import * as React from "react"
-import {
-  IconCamera,
-  IconChartBar,
-  IconDashboard,
-  IconDatabase,
-  IconFileAi,
-  IconFileDescription,
-  IconFileWord,
-  IconFolder,
-  IconHelp,
-  IconInnerShadowTop,
-  IconListDetails,
-  IconReport,
-  IconSearch,
-  IconSettings,
-  IconUsers,
-} from "@tabler/icons-react"
+import * as React from 'react';
+import { IconInnerShadowTop } from '@tabler/icons-react';
 
-import { UserNavDocuments } from "@/components/nav-documents"
-import { AdminNavPanel } from "@/components/nav-main"
-import { ControlNavPanel } from "@/components/nav-secondary"
-import { UserNavProfile } from "@/components/nav-user"
+import { UserNavDocuments } from '@/components/nav-documents';
+import { AdminNavPanel } from '@/components/nav-main';
+import { ControlNavPanel } from '@/components/nav-secondary';
+import { UserNavProfile } from '@/components/nav-user';
 import {
   Sidebar,
   SidebarContent,
@@ -31,7 +15,7 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
-} from "@/components/ui/sidebar"
+} from '@/components/ui/sidebar';
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   return (
@@ -39,10 +23,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       <SidebarHeader>
         <SidebarMenu>
           <SidebarMenuItem>
-            <SidebarMenuButton
-              asChild
-              className="data-[slot=sidebar-menu-button]:!p-1.5"
-            >
+            <SidebarMenuButton asChild className="data-[slot=sidebar-menu-button]:!p-1.5">
               <a href="#">
                 <IconInnerShadowTop className="!size-5" />
                 <span className="text-base font-semibold">Acme Inc.</span>
@@ -60,5 +41,5 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         <UserNavProfile />
       </SidebarFooter>
     </Sidebar>
-  )
+  );
 }

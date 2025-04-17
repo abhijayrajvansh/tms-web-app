@@ -1,6 +1,5 @@
 'use client';
 
-import { type Icon } from '@tabler/icons-react';
 import {
   SidebarGroup,
   SidebarGroupContent,
@@ -11,23 +10,13 @@ import {
 } from '@/components/ui/sidebar';
 
 import {
-  IconCamera,
   IconChartBar,
   IconDashboard,
-  IconDatabase,
-  IconFileAi,
-  IconFileDescription,
-  IconFileWord,
   IconFolder,
-  IconHelp,
-  IconInnerShadowTop,
   IconListDetails,
-  IconReport,
-  IconSearch,
-  IconSettings,
-  IconUsers,
+  IconUsers
 } from '@tabler/icons-react';
-import { useRouter, usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 
 const navMain = [
   {

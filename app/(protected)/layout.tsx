@@ -4,7 +4,6 @@ import { redirect } from 'next/navigation';
 import { AuthProvider } from '@/app/context/AuthContext';
 import { SidebarInset, SidebarProvider } from '@/components/ui/sidebar';
 import { AppSidebar } from '@/components/app-sidebar';
-import { SiteHeader } from '@/components/site-header';
 
 export const dynamic = 'force-dynamic';
 

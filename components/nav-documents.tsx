@@ -1,77 +1,58 @@
-"use client"
+'use client';
 
-import {
-  IconDots,
-  IconShare3,
-  IconTrash,
-  type Icon,
-} from "@tabler/icons-react"
+// import { IconDots, IconShare3, IconTrash, type Icon } from '@tabler/icons-react';
 
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
+// import {
+//   DropdownMenu,
+//   DropdownMenuContent,
+//   DropdownMenuItem,
+//   DropdownMenuSeparator,
+//   DropdownMenuTrigger,
+// } from '@/components/ui/dropdown-menu';
 import {
   SidebarGroup,
   SidebarGroupLabel,
   SidebarMenu,
-  SidebarMenuAction,
   SidebarMenuButton,
   SidebarMenuItem,
-  useSidebar,
-} from "@/components/ui/sidebar"
+  // useSidebar,
+} from '@/components/ui/sidebar';
 
-import {
-  IconCamera,
-  IconChartBar,
-  IconDashboard,
-  IconDatabase,
-  IconFileAi,
-  IconFileDescription,
-  IconFileWord,
-  IconFolder,
-  IconHelp,
-  IconInnerShadowTop,
-  IconListDetails,
-  IconReport,
-  IconSearch,
-  IconSettings,
-  IconUsers,
-} from "@tabler/icons-react"
-import { usePathname } from "next/navigation"
+import { IconDatabase, IconFileWord, IconReport } from '@tabler/icons-react';
+import { usePathname } from 'next/navigation';
 
 const documents = [
   {
-    name: "Tabels",
-    url: "/tabels",
+    name: 'Tabels',
+    url: '/tabels',
     icon: IconDatabase,
   },
   {
-    name: "Reports",
-    url: "#",
+    name: 'Reports',
+    url: '#',
     icon: IconReport,
   },
   {
-    name: "Word Assistant",
-    url: "#",
+    name: 'Word Assistant',
+    url: '#',
     icon: IconFileWord,
   },
-]
+];
 
 export function UserNavDocuments() {
-  const { isMobile } = useSidebar()
-  const pathname = usePathname()
+  // const { isMobile } = useSidebar();
+  const pathname = usePathname();
 
   return (
     <SidebarGroup className="group-data-[collapsible=icon]:hidden">
       <SidebarGroupLabel>Documents</SidebarGroupLabel>
       <SidebarMenu>
         {documents.map((item) => (
-          <SidebarMenuItem key={item.name} className={pathname === item.url ? 'bg-sidebar-primary/30 rounded' : ''}>
-            <SidebarMenuButton asChild className='hover:bg-primary/40'>
+          <SidebarMenuItem
+            key={item.name}
+            className={pathname === item.url ? 'bg-sidebar-primary/30 rounded' : ''}
+          >
+            <SidebarMenuButton asChild className="hover:bg-primary/40">
               <a href={item.url}>
                 <item.icon />
                 <span>{item.name}</span>
@@ -117,5 +98,5 @@ export function UserNavDocuments() {
         </SidebarMenuItem> */}
       </SidebarMenu>
     </SidebarGroup>
-  )
+  );
 }

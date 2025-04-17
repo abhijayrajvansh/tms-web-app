@@ -1,7 +1,6 @@
 'use client';
 
 import * as React from 'react';
-import { type Icon } from '@tabler/icons-react';
 
 import {
   SidebarGroup,
@@ -11,21 +10,8 @@ import {
   SidebarMenuItem,
 } from '@/components/ui/sidebar';
 import {
-  IconCamera,
-  IconChartBar,
-  IconDashboard,
-  IconDatabase,
-  IconFileAi,
-  IconFileDescription,
-  IconFileWord,
-  IconFolder,
   IconHelp,
-  IconInnerShadowTop,
-  IconListDetails,
-  IconReport,
-  IconSearch,
-  IconSettings,
-  IconUsers,
+  IconSettings
 } from '@tabler/icons-react';
 
 const navSecondary = [

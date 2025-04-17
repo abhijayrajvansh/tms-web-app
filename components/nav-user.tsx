@@ -1,16 +1,16 @@
 'use client';
 
 import {
-  IconMail,
   IconDotsVertical,
   IconLoader,
   IconLogout,
-  IconNotification,
+  IconMail,
   IconUserCircle,
-  IconUserFilled,
+  IconUserFilled
 } from '@tabler/icons-react';
 
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { useAuth } from '@/app/context/AuthContext';
+import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -27,7 +27,6 @@ import {
   useSidebar,
 } from '@/components/ui/sidebar';
 import { useLogout } from '@/hooks/useAuth';
-import { useAuth } from '@/app/context/AuthContext';
 
 export function UserNavProfile() {
   const { isMobile } = useSidebar();
