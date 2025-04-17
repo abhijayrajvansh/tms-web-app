@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createAdminClient } from '@/appwrite/appwrite.config';
-import { ID } from 'node-appwrite';
+import { ID, Permission, Role } from 'node-appwrite';
 import env from '@/constants';
 
 const { databases } = await createAdminClient();
@@ -8,17 +8,33 @@ const { databases } = await createAdminClient();
 export async function POST(req: NextRequest) {
   const body = await req.json();
 
-  const { title, description, is_read, user_id } = body;
+  const { title, description, is_read, userId } = body;
   const action = body.action || null;
-  
-  if (
-    title === undefined || 
-    description === undefined || 
-    is_read === undefined || 
-    user_id === undefined
-  ) {
+
+  if (typeof title !== 'string') {
     return NextResponse.json(
-      { error: 'Missing required fields' },
+      { error: 'Invalid title: must be a string' },
+      { status: 400 }
+    );
+  }
+
+  if (typeof description !== 'string') {
+    return NextResponse.json(
+      { error: 'Invalid description: must be a string' },
+      { status: 400 }
+    );
+  }
+
+  if (typeof is_read !== 'boolean') {
+    return NextResponse.json(
+      { error: 'Invalid is_read: must be a boolean' },
+      { status: 400 }
+    );
+  }
+
+  if (typeof userId !== 'string') {
+    return NextResponse.json(
+      { error: 'Invalid receivers: userId must be a string' },
       { status: 400 }
     );
   }
@@ -32,9 +48,12 @@ export async function POST(req: NextRequest) {
         title,
         description,
         is_read,
-        user_id,
         action, 
-      }
+      },
+      [
+        Permission.read(Role.user(userId)),
+        Permission.update(Role.user(userId)),
+      ]
     );
 
     return NextResponse.json({ success: true, notificationID: res.$id });
