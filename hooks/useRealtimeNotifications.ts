@@ -1,7 +1,6 @@
 import { Client } from 'appwrite';
 import { useEffect, useState } from 'react';
 import env from '@/constants';
-import { apwrClient } from '@/appwrite/appwrite.client';
 
 const useRealtimeNotifications = ({
   userId,
@@ -30,7 +29,7 @@ const useRealtimeNotifications = ({
       });
 
       // Create a dedicated Realtime instance
-      const clientRealtime = apwrClient;
+      const clientRealtime = client;
 
       // Subscribe to changes in the notifications collection
       console.log('Setting up subscription for:', userId);
@@ -38,7 +37,7 @@ const useRealtimeNotifications = ({
       const unsubscribe = clientRealtime.subscribe(
         [`databases.${env.DATABASE_ID}.collections.${env.COLLECTION_NOTIFICATIONS}.documents`],
         (response) => {
-          console.log('Realtime event received:', response);
+          console.log('\n\n\nRealtime event received:', response);
 
           // Check if this is a new document event
           if (

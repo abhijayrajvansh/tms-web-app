@@ -82,7 +82,7 @@ const NotificationPanel = () => {
     }
   }, [userId]);
 
-  // Refresh notifications every 30 seconds as a fallback if realtime fails
+  // Refresh notifications every 3 seconds as a fallback if realtime fails
   useEffect(() => {
     if (!userId) return;
 
@@ -105,7 +105,7 @@ const NotificationPanel = () => {
           );
         });
       });
-    }, 30000);
+    }, 60000);
 
     return () => clearInterval(intervalId);
   }, [userId]);
