@@ -34,7 +34,7 @@ const NotificationPanel = () => {
       const changedNotifs = response.payload as Notification
 
       if (eventType.includes('create')) {
-        setNotifications(() => [changedNotifs, ...notifications]);
+        setNotifications((prevNotifs) => [changedNotifs, ...prevNotifs]);
       }
 
       // similary for update (mark as read) 
