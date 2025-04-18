@@ -1,31 +1,27 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { createSessionClient } from '@/appwrite/appwrite.config';
+import { createAdminClient } from '@/appwrite/appwrite.config';
 import { Query } from 'node-appwrite';
 import env from '@/constants';
-import { cookies } from 'next/headers';
 
-export async function GET() {
-  const sessionCookie = (await cookies()).get('session');
-
-  if (!sessionCookie?.value) {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-  }
-
+export async function POST(request: NextRequest) {
   try {
-    const { account } = await createSessionClient(sessionCookie.value);
-    const user = await account.get();
-    const userId = user.$id;
+    const { userId } = await request.json();
 
-    const { databases } = await createSessionClient(sessionCookie.value);
+    if (!userId) {
+      return NextResponse.json({ error: 'userId is required' }, { status: 400 });
+    }
+
+    const { databases } = await createAdminClient();
+
     const notifications = await databases.listDocuments(
       env.DATABASE_ID,
       env.COLLECTION_NOTIFICATIONS,
-      []
-      // [Query.equal('userId', userId), Query.orderDesc('$createdAt')],
+      [Query.equal('userId', userId), Query.orderDesc('$createdAt'), Query.limit(50)],
     );
 
     return NextResponse.json(notifications);
   } catch (error) {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    console.error('Error fetching notifications:', error);
+    return NextResponse.json({ error: 'Failed to fetch notifications' }, { status: 500 });
   }
 }
