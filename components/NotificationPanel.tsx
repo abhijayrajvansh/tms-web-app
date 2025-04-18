@@ -43,9 +43,9 @@ const NotificationPanel = () => {
           )}
         </button>
       </PopoverTrigger>
-      <PopoverContent className="w-[380px] p-0" align="end">
+      <PopoverContent className="w-[380px] p-0 rounded-xl" align="end">
         <Card className="border-0 shadow-none">
-          <h3 className="font-semibold text-lg p-4 border-b">Notifications</h3>
+          <h3 className="font-semibold text-xl py-1 pl-4 pb-2 border-b">Notifications</h3>
           <ScrollArea className="h-[400px]">
             <div className="p-4">
               {isLoading && <p>loading...</p>}
