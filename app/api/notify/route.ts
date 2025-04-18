@@ -12,30 +12,21 @@ export async function POST(req: NextRequest) {
   const action = body.action || null;
 
   if (typeof title !== 'string') {
-    return NextResponse.json(
-      { error: 'Invalid title: must be a string' },
-      { status: 400 }
-    );
+    return NextResponse.json({ error: 'Invalid title: must be a string' }, { status: 400 });
   }
 
   if (typeof description !== 'string') {
-    return NextResponse.json(
-      { error: 'Invalid description: must be a string' },
-      { status: 400 }
-    );
+    return NextResponse.json({ error: 'Invalid description: must be a string' }, { status: 400 });
   }
 
   if (typeof is_read !== 'boolean') {
-    return NextResponse.json(
-      { error: 'Invalid is_read: must be a boolean' },
-      { status: 400 }
-    );
+    return NextResponse.json({ error: 'Invalid is_read: must be a boolean' }, { status: 400 });
   }
 
   if (typeof userId !== 'string') {
     return NextResponse.json(
       { error: 'Invalid receivers: userId must be a string' },
-      { status: 400 }
+      { status: 400 },
     );
   }
 
@@ -51,15 +42,11 @@ export async function POST(req: NextRequest) {
         action,
         userId, // Adding the required userId field
       },
-      [
-        Permission.read(Role.user(userId)),
-        Permission.update(Role.user(userId)),
-      ]
+      [Permission.read(Role.user(userId)), Permission.update(Role.user(userId))],
     );
 
     return NextResponse.json({ success: true, notificationID: res.$id });
-  } 
-  catch (error) {
+  } catch (error) {
     return NextResponse.json({ error: error }, { status: 500 });
   }
 }
