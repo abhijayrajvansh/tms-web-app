@@ -1,17 +1,12 @@
-import env from '@/constants';
-import { Client, Account, OAuthProvider } from 'appwrite';
+import { getNotifications } from "@/services/notification.service";
 
-const client = new Client()
-  .setEndpoint(env.ENDPOINT)
-  .setProject(env.PROJECT_ID)
-
-const account = new Account(client);
-
-// Go to OAuth provider login page
-const response = account.createOAuth2Session(
-  OAuthProvider.Google, // provider
-  'http://localhost:3000/dashboard', // redirect here on success
-  'http://localhost:3000/login', // redirect here on failure
-);
-
-console.log({response})
+(() => {
+  const userId = '67fcfd82000b76828ef9'; // Replace with actual user ID
+  getNotifications(userId)
+    .then((notifications) => {
+      console.log('Notifications:', notifications);
+    })
+    .catch((error) => {
+      console.error('Error fetching notifications:', error);
+    });
+})()

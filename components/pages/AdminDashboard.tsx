@@ -21,9 +21,9 @@ export default function AdminDashboard (){
                   <AnalyticsChart />
                 </div>
               </div>
-              <div className="lg:w-[380px]">
+
                 <NotificationPanel />
-              </div>
+
             </div>
             <DataTable data={data} />
           </div>
