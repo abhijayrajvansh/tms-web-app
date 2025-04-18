@@ -1,29 +1,15 @@
 'use client';
 
-import React from 'react';
-import { SiteHeader } from '../site-header';
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import axios from 'axios';
-import env from '@/constants';
-import { Button } from '../ui/button';
-import { IconDotsVertical, IconLoader2, IconPlus } from '@tabler/icons-react';
-import { AddUserDialog } from '../AddUserDialog';
 import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from '@/components/ui/dialog';
-import { Input } from '@/components/ui/input';
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from '@/components/ui/table';
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '@/components/ui/alert-dialog';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -31,8 +17,6 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { Badge } from '../ui/badge';
-import { columns } from './teams-columns';
 import {
   Select,
   SelectContent,
@@ -41,22 +25,28 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/components/ui/table';
+import env from '@/constants';
+import {
   IconChevronLeft,
   IconChevronRight,
   IconChevronsLeft,
-  IconChevronsRight,
+  IconChevronsRight, IconDotsVertical, IconLoader2, IconPlus
 } from '@tabler/icons-react';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import axios from 'axios';
+import React from 'react';
+import { AddUserDialog } from '../AddUserDialog';
+import { SiteHeader } from '../site-header';
+import { Badge } from '../ui/badge';
+import { Button } from '../ui/button';
 import { Label } from '../ui/label';
-import {
-  AlertDialog,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogCancel,
-  AlertDialogAction,
-} from '@/components/ui/alert-dialog';
 
 interface User {
   id: string;

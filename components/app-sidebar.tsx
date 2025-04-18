@@ -1,13 +1,11 @@
 'use client';
 
 import * as React from 'react';
-import { IconInnerShadowTop } from '@tabler/icons-react';
 
 import { UserNavDocuments } from '@/components/nav-documents';
 import { AdminNavPanel } from '@/components/nav-main';
 import { ControlNavPanel } from '@/components/nav-secondary';
 import { UserNavProfile } from '@/components/nav-user';
-import { FaTruck } from "react-icons/fa";
 import {
   Sidebar,
   SidebarContent,
@@ -17,6 +15,7 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from '@/components/ui/sidebar';
+import { FaTruck } from "react-icons/fa";
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   return (

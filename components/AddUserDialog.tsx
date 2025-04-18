@@ -1,14 +1,13 @@
-import React from 'react';
 import { Button } from '@/components/ui/button';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import env from '@/constants';
 import { IconLoader2 } from '@tabler/icons-react';
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import axios from 'axios';
-import env from '@/constants';
+import React from 'react';
 import { z } from 'zod';
-import { useRouter } from 'next/navigation';
 
 const userSchema = z.object({
   userId: z.string().refine((val) => {
@@ -35,7 +34,6 @@ export function AddUserDialog({ isOpen, onOpenChange }: AddUserDialogProps) {
     roles: [] as string[],
   });
   const [validationError, setValidationError] = React.useState<string | null>(null);
-  const router = useRouter();
   const queryClient = useQueryClient();
 
   const createUserMutation = useMutation({
