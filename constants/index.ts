@@ -4,7 +4,7 @@ const env = {
   // backend
   NODE_ENV: process.env.NEXT_PUBLIC_NODE_ENV as string,
   SERVER_URL: process.env.NEXT_PUBLIC_SERVER_URL as string,
-  CLIENT_URL: process.env.NEXT_PUBLIC_CLIENT_URL as string,
+  // CLIENT_URL: process.env.NEXT_PUBLIC_CLIENT_URL as string,
   
   // appwrite config & client
   ENDPOINT: process.env.NEXT_PUBLIC_ENDPOINT as string,

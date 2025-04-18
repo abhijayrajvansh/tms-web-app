@@ -2,94 +2,162 @@
 
 import React, { useState, useEffect } from 'react';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { useQuery } from '@tanstack/react-query';
 import { formatDistanceToNow } from 'date-fns';
 import { Card } from './ui/card';
 import { getNotifications, type Notification } from '@/services/notification.service';
 import { useAuth } from '@/app/context/AuthContext';
 import { BellIcon } from 'lucide-react';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
-import { apwrClient } from '@/appwrite/appwrite.client';
-
-type NotificationResponse = {
-  documents: Notification[];
-};
+import useRealtimeNotifications from '@/hooks/useRealtimeNotifications';
+import { toast } from 'sonner';
 
 const NotificationPanel = () => {
   const { user } = useAuth();
-  const userId = user?.$id!;
+  const userId = user?.$id;
+  const [notifs, setNotifs] = useState<Notification[]>([]);
+  const [loading, setLoading] = useState(false);
 
-  // let isLoading = false;
-  
-  const [notifications, setNotifications] = useState<Notification[]>([]);
+  async function fetchNotifications() {
+    if (!userId) return [];
+    try {
+      const res = await getNotifications(userId);
+      console.log('Fetched notifications:', res);
+      return res.documents as Notification[];
+    } catch (error) {
+      console.error('Error fetching notifications:', error);
+      toast('Error', {
+        description: 'Failed to fetch notifications',
+      });
+      return [];
+    }
+  }
 
-  useEffect(() => {
-    const channel = 'databases.67f637ce00137a23dade.collections.68011c7f000f820677a2.documents';
-    
-    const unsubscribe = apwrClient.subscribe(channel, (response) => {
-      console.log('if this logs, then the subscription is working');
-      const eventType = response.events[0];
-      console.log(response.events); //debug
+  // Handle new notifications from realtime
+  const handleNewNotification = (payload: Notification) => {
+    console.log('New notification received:', payload);
 
-      const changedNotifs = response.payload as Notification
+    // Play notification sound
+    try {
+      const audio = new Audio('/notification-sound.mp3');
+      audio.play().catch((e) => console.log('Unable to play notification sound', e));
+    } catch (e) {
+      console.log('Audio playback error:', e);
+    }
 
-      if (eventType.includes('create')) {
-        setNotifications((prevNotifs) => [changedNotifs, ...prevNotifs]);
-      }
+    setNotifs((prev) => {
+      // Check if notification already exists to avoid duplicates
+      const exists = prev.some((n) => n.id === payload.id);
+      if (exists) return prev;
 
-      // similary for update (mark as read) 
-    })
+      toast(payload.title, {
+        description: payload.description,
+      });
 
-    return () => unsubscribe();
-  }, [])
+      return [payload, ...prev];
+    });
+  };
 
-  const { data, isLoading } = useQuery<NotificationResponse>({
-    queryKey: ['notifications', userId],
-    queryFn: () => getNotifications(userId),
-    enabled: !!userId,
-    staleTime: 1000 * 60, // 1 minute
+  // Use the custom hook for realtime notifications and get connection status
+  const { connected } = useRealtimeNotifications({
+    userId: userId || '',
+    onNotification: handleNewNotification,
   });
 
+  // Show toast when connection status changes
   useEffect(() => {
-    if (data) {
-      setNotifications(data.documents);
+    if (connected) {
+      toast('Connected', {
+        description: 'Realtime notifications are now active',
+      });
     }
-  }, [data]);
+  }, [connected, toast]);
+
+  // Initial fetch of notifications
+  useEffect(() => {
+    if (userId) {
+      setLoading(true);
+      fetchNotifications()
+        .then(setNotifs)
+        .finally(() => setLoading(false));
+    }
+  }, [userId]);
+
+  // Refresh notifications every 30 seconds as a fallback if realtime fails
+  useEffect(() => {
+    if (!userId) return;
+
+    const intervalId = setInterval(() => {
+      console.log('Performing backup notification fetch');
+      fetchNotifications().then((notifications) => {
+        setNotifs((current) => {
+          // Merge and deduplicate notifications
+          const combinedNotifications = [...notifications];
+
+          current.forEach((existingNotif) => {
+            if (!combinedNotifications.some((n) => n.id === existingNotif.id)) {
+              combinedNotifications.push(existingNotif);
+            }
+          });
+
+          // Sort by creation time (newest first)
+          return combinedNotifications.sort(
+            (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
+          );
+        });
+      });
+    }, 30000);
+
+    return () => clearInterval(intervalId);
+  }, [userId]);
 
   return (
     <Popover>
       <PopoverTrigger asChild>
         <button className="p-2 hover:bg-slate-100 rounded-full relative">
           <BellIcon size={23} />
-          {notifications.some((n) => !n.is_read) && (
+          {notifs.some((n) => !n.is_read) && (
             <span className="absolute top-1 right-1 h-2 w-2 rounded-full bg-red-500" />
           )}
         </button>
       </PopoverTrigger>
       <PopoverContent className="w-[380px] p-0 rounded-xl" align="end">
         <Card className="border-0 shadow-none">
-          <h3 className="font-semibold text-xl py-1 pl-4 pb-2 border-b">Notifications</h3>
+          <div className="flex justify-between items-center border-b">
+            <h3 className="font-semibold text-xl py-1 pl-4 pb-2">Notifications</h3>
+            {connected ? (
+              <span className="text-xs text-green-500 pr-4">● Live</span>
+            ) : (
+              <span className="text-xs text-red-500 pr-4">● Offline</span>
+            )}
+          </div>
           <ScrollArea className="h-[400px]">
-            <div className="p-4">
-              {isLoading && <p>loading...</p>}
-              {notifications.map((notification) => (
-                <div
-                  key={notification.id}
-                  className={`mb-4 p-3 border rounded-lg hover:bg-slate-50 ${
-                    !notification.is_read ? 'bg-slate-50' : ''
-                  }`}
-                >
-                  <h4 className="font-medium text-sm mb-1">{notification.title}</h4>
-                  <p className="text-sm text-gray-600 mb-2">{notification.description}</p>
-                  <span className="text-xs text-gray-500">
-                    {formatDistanceToNow(new Date(notification.createdAt), { addSuffix: true })}
-                  </span>
-                </div>
-              ))}
-              {!isLoading && notifications.length === 0 && (
-                <p className="text-center text-gray-500">No notifications</p>
-              )}
-            </div>
+            {userId ? (
+              <div className="p-4">
+                {loading && <p>loading...</p>}
+                {notifs.length > 0
+                  ? notifs.map((notification) => (
+                      <div
+                        key={notification.id}
+                        className={`mb-4 p-3 border rounded-lg hover:bg-slate-50 ${
+                          !notification.is_read ? 'bg-slate-50' : ''
+                        }`}
+                      >
+                        <h4 className="font-medium text-sm mb-1">{notification.title}</h4>
+                        <p className="text-sm text-gray-600 mb-2">{notification.description}</p>
+                        <span className="text-xs text-gray-500">
+                          {formatDistanceToNow(new Date(notification.createdAt), {
+                            addSuffix: true,
+                          })}
+                        </span>
+                      </div>
+                    ))
+                  : !loading && <p className="text-center text-gray-500">No notifications</p>}
+              </div>
+            ) : (
+              <div className="p-4">
+                <p className="text-center text-gray-500">Please log in to see notifications</p>
+              </div>
+            )}
           </ScrollArea>
         </Card>
       </PopoverContent>

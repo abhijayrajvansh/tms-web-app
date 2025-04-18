@@ -6,3 +6,5 @@ export const apwrClient = new Client()
   .setProject(env.PROJECT_ID)
 
 export const databases = new Databases(apwrClient);
+
+console.log({env})
