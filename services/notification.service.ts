@@ -2,16 +2,17 @@ import env from '@/constants';
 import axios from 'axios';
 
 export interface Notification {
-  $id: string;
+  id: string;
   title: string;
   description: string;
   action: string | null;
   is_read: boolean;
   userId: string;
-  $createdAt: string;
+  createdAt: string;
 }
 
 interface NotificationResponse {
+  total: number;
   documents: Notification[];
 }
 
