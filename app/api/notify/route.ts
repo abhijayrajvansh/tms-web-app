@@ -48,7 +48,8 @@ export async function POST(req: NextRequest) {
         title,
         description,
         is_read,
-        action, 
+        action,
+        userId, // Adding the required userId field
       },
       [
         Permission.read(Role.user(userId)),
