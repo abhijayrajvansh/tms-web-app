@@ -9,6 +9,7 @@ import { getNotifications, type Notification } from '@/services/notification.ser
 import { useAuth } from '@/app/context/AuthContext';
 import { BellIcon } from 'lucide-react';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { apwrClient } from '@/appwrite/appwrite.client';
 
 type NotificationResponse = {
   documents: Notification[];
@@ -17,8 +18,30 @@ type NotificationResponse = {
 const NotificationPanel = () => {
   const { user } = useAuth();
   const userId = user?.$id!;
+
+  // let isLoading = false;
   
   const [notifications, setNotifications] = useState<Notification[]>([]);
+
+  useEffect(() => {
+    const channel = 'databases.67f637ce00137a23dade.collections.68011c7f000f820677a2.documents';
+    
+    const unsubscribe = apwrClient.subscribe(channel, (response) => {
+      console.log('if this logs, then the subscription is working');
+      const eventType = response.events[0];
+      console.log(response.events); //debug
+
+      const changedNotifs = response.payload as Notification
+
+      if (eventType.includes('create')) {
+        setNotifications(() => [changedNotifs, ...notifications]);
+      }
+
+      // similary for update (mark as read) 
+    })
+
+    return () => unsubscribe();
+  }, [])
 
   const { data, isLoading } = useQuery<NotificationResponse>({
     queryKey: ['notifications', userId],
