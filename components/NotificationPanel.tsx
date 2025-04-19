@@ -56,11 +56,11 @@ const NotificationPanel = () => {
         <button className="p-2 rounded-xl bg-primary/90 hover:bg-primary/70 font-medium relative text-white border-primary">
           <BellIcon size={20} />
           {notifs.some((n) => !n.is_read) && (
-            <span className="absolute -top-1 -right-1 text-xs bg-red-500 px-1 rounded-full text-white font-bold h-3 w-3" />
+            <span className="absolute -top-1 -right-1 text-xs bg-red-500 px-01 rounded-full text-white font-bold h-3 w-3" />
           )}
         </button>
       </PopoverTrigger>
-      <PopoverContent className="w-[450px] p-0 rounded-xl" align="end">
+      <PopoverContent className="w-[calc(100vw-2rem)] sm:w-[450px] p-0 rounded-xl" align="end">
         <Card className="shadow-none" notif>
           <div className="flex justify-between items-center border-b">
             <h3 className="font-semibold text-xl py-1 pl-4 pb-2">Notifications</h3>
