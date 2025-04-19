@@ -8,8 +8,9 @@ const { databases } = await createAdminClient();
 export async function POST(req: NextRequest) {
   const body = await req.json();
 
-  const { title, description, is_read, userId } = body;
+  const { title, description, userId } = body;
   const action = body.action || null;
+  const is_read = body.is_read || false;
 
   if (typeof title !== 'string') {
     return NextResponse.json({ error: 'Invalid title: must be a string' }, { status: 400 });
@@ -17,10 +18,6 @@ export async function POST(req: NextRequest) {
 
   if (typeof description !== 'string') {
     return NextResponse.json({ error: 'Invalid description: must be a string' }, { status: 400 });
-  }
-
-  if (typeof is_read !== 'boolean') {
-    return NextResponse.json({ error: 'Invalid is_read: must be a boolean' }, { status: 400 });
   }
 
   if (typeof userId !== 'string') {

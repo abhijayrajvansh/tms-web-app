@@ -3,21 +3,25 @@
 import { useAuth } from '@/app/context/AuthContext';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { getNotifications, type Notification } from '@/services/notification.service';
+import {
+  getNotifications,
+  readNotification,
+  type Notification,
+} from '@/services/notification.service';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { formatDistanceToNow } from 'date-fns';
-import { BellDot, BellIcon, ConciergeBellIcon } from 'lucide-react';
-import { Card } from './ui/card';
-import { useQuery } from '@tanstack/react-query';
+import { BellIcon } from 'lucide-react';
 import { useEffect, useState } from 'react';
-import { Button } from './ui/button';
+import { Card } from './ui/card';
 
 const NotificationPanel = () => {
   const { user } = useAuth();
   const userId = user?.$id as string;
-  
-  // jugaad, but db heavy 
+  const queryClient = useQueryClient();
+
+  // jugaad, but db heavy
   // change this update notification refetch logic, default: 5 for 5 seconds
-  const NOTIF_REFESH_INTERVAL: number = 666;
+  const NOTIF_REFESH_INTERVAL: number = 5;
 
   const { data, isLoading, isError } = useQuery({
     queryKey: ['notifications', userId],
@@ -30,22 +34,30 @@ const NotificationPanel = () => {
   useEffect(() => {
     setNotifs(data?.documents || []);
     // console.log('> running setNotifs');
-  }, [data])
+  }, [data]);
 
   const handleNotificationClick = (notifID: string) => {
-    console.log(`Notification clicked: ${notifID}`);
-    // Mark notification as read
+    // console.log(`Notification clicked: ${notifID}`);
+    readNotifMutation.mutate(notifID);
+
     // perform action based on notification type
   };
+
+  const readNotifMutation = useMutation({
+    mutationFn: (notifID: string) => readNotification(notifID),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['notifications', userId] });
+    },
+  });
 
   return (
     <Popover>
       <PopoverTrigger asChild>
         <button className="p-2 rounded-xl bg-primary/90 hover:bg-primary/70 font-medium relative text-white">
-          <BellIcon size={20}/>
-            {notifs.some((n) => !n.is_read) && (
+          <BellIcon size={20} />
+          {notifs.some((n) => !n.is_read) && (
             <span className="absolute -top-1 -right-1 text-xs bg-red-500 px-1 rounded-full text-white font-bold h-3 w-3" />
-            )}
+          )}
         </button>
       </PopoverTrigger>
       <PopoverContent className="w-[450px] p-0 rounded-xl" align="end">
@@ -64,20 +76,23 @@ const NotificationPanel = () => {
                 )}
                 {notifs.length > 0
                   ? notifs.map((notification) => (
-                      <div onClick={() => {
-                        if(!notification.is_read) {
-                          handleNotificationClick(notification.id)
-                        }
-                      }}
+                      <div
+                        onClick={() => {
+                          if (!notification.is_read) {
+                            handleNotificationClick(notification.id);
+                          }
+                        }}
                         key={notification.id}
-                        className={`mb-4 p-3 border rounded-lg ${
+                        className={`mb-2 px-3 py-2 border rounded-lg ${
                           !notification.is_read ? 'bg-primary/10 cursor-pointer' : 'bg-white'
                         }`}
                       >
-                        <div className='flex items-start justify-between gap-2'>
-                        <h4 className="font-medium text-sm mb-1">{notification.title}</h4>
-                        {!notification.is_read && <span className="text-xs bg-red-500 px-1 rounded-full text-white font-bold h-2 w-2 mr-1" />}
-                        {/* <button className='text-xs cursor-pointer border rounded p-1 px-2'>Done</button> */}
+                        <div className="flex items-start justify-between gap-2">
+                          <h4 className="font-medium text-sm mb-1">{notification.title}</h4>
+                          {!notification.is_read && (
+                            <span className="text-xs bg-red-500 px-1 rounded-full text-white font-bold h-2 w-2 mr-1" />
+                          )}
+                          {/* <button className='text-xs cursor-pointer border rounded p-1 px-2'>Done</button> */}
                         </div>
                         <p className="text-sm text-gray-600 mb-2">{notification.description}</p>
                         <div className="w-full text-right">

@@ -23,3 +23,11 @@ export const getNotifications = async (userId: string): Promise<NotificationResp
 
   return response.data;
 };
+
+export const readNotification = async (notificationID: string): Promise<boolean> => {
+  const response = await axios.post(env.SERVER_URL + '/api/notify/read', {
+    notificationID,
+  });
+
+  return response.data.success;
+}
