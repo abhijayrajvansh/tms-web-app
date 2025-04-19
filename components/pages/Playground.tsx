@@ -12,6 +12,7 @@ const Playground = () => {
       const { data, error } = await supabase
         .from('messages')
         .select('*')
+        .eq('userId', '67fcfd82000b76828ef9')
         .order('created_at', { ascending: false });
 
       if (error) {
