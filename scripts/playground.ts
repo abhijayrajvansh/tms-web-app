@@ -1,5 +1,12 @@
-import { readNotification } from '@/services/notification.service';
+import env from '@/constants';
+import {createClient} from '@supabase/supabase-js';
+
+const supabase = createClient(
+  env.SUPABASE_URL,
+  env.SUPABASE_ANON_KEY
+);  
 
 (async() => {
-  const res = await readNotification('68021f900030abf9c279');
+  const { data, error } = await supabase.from('messages').select()
+  console.log({data})
 })()
