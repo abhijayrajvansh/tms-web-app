@@ -2,12 +2,14 @@ import * as React from "react"
 
 import { cn } from "@/lib/utils"
 
-function Card({ className, ...props }: React.ComponentProps<"div">) {
+function Card({ className, notif, ...props }: React.ComponentProps<"div"> & { notif?: boolean }) {
   return (
     <div
       data-slot="card"
       className={cn(
-        "bg-card text-card-foreground flex flex-col rounded-xl border p-1 shadow-sm",
+        `bg-card text-card-foreground flex flex-col rounded-xl border p-1 shadow-sm py-3 justify-between
+        ${notif ? "py-1": "py-4 gap-4"}
+        `,
         className
       )}
       {...props}
