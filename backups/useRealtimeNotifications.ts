@@ -1,3 +1,5 @@
+//@ts-nocheck
+
 import { Client } from 'appwrite';
 import { useEffect, useState } from 'react';
 import env from '@/constants';

@@ -11,7 +11,7 @@ export interface Notification {
   createdAt: string;
 }
 
-interface NotificationResponse {
+export interface NotificationResponse {
   total: number;
   documents: Notification[];
 }
